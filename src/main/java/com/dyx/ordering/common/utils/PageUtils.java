@@ -8,6 +8,12 @@ import java.util.Objects;
 
 public class PageUtils {
 
+    /**
+     * 构造分页器
+     * @param query
+     * @return
+     * @param <T>
+     */
     public static <T> IPage<T> buildPage(Query query) {
         return
                 new Page<>(

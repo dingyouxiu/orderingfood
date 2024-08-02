@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class WechatFoodServiceImpl implements WechatFoodService {
@@ -22,6 +23,42 @@ public class WechatFoodServiceImpl implements WechatFoodService {
     @Autowired
     private FoodService foodService;
 
+    @Override
+    public Boolean saveBath(List<FoodDTO> foodDTOList) {
+        if (CollectionUtils.isEmpty(foodDTOList)) {
+            return Boolean.FALSE;
+        }
+
+        List<FoodEntity> foodEntityList = FoodEntityConverter.INSTANCE.toEntityList(foodDTOList);
+
+        return foodService.saveBatch(foodEntityList);
+    }
+
+    @Override
+    public Boolean deleteBath(List<Long> foodIdList) {
+        if (CollectionUtils.isEmpty(foodIdList)) {
+            return Boolean.FALSE;
+        }
+
+        return foodService.removeByIds(foodIdList);
+    }
+
+    @Override
+    public FoodDTO edit(FoodDTO foodDTO) {
+        if (Objects.isNull(foodDTO)) {
+            return foodDTO;
+        }
+
+        foodService.updateById(foodDTO);
+
+        return foodDTO;
+    }
+
+    /**
+     * 分页查询
+     * @param wechatFoodQuery
+     * @return
+     */
     @Override
     public IPage<FoodDTO> queryPage(WechatFoodQuery wechatFoodQuery) {
 
@@ -36,6 +73,7 @@ public class WechatFoodServiceImpl implements WechatFoodService {
 
     private LambdaQueryWrapper<FoodEntity> buildQueryWrapper(WechatFoodQuery query){
         return Wrappers.<FoodEntity>lambdaQuery()
+                .eq(FoodEntity::getCategory,query.getCategory())
                 ;
     }
 
