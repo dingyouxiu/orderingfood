@@ -1,7 +1,7 @@
-package com.dyx.ordering.wechat.entity.converter;
+package com.dyx.ordering.baseseriver.entity.converter;
 
-import com.dyx.ordering.wechat.controller.dto.UserDTO;
-import com.dyx.ordering.wechat.entity.UserEntity;
+import com.dyx.ordering.baseseriver.dto.UserDTO;
+import com.dyx.ordering.baseseriver.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

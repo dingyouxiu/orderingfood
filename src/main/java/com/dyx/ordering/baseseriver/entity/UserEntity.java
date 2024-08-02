@@ -1,4 +1,4 @@
-package com.dyx.ordering.wechat.entity;
+package com.dyx.ordering.baseseriver.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.dyx.ordering.common.entity.BaseEntity;
