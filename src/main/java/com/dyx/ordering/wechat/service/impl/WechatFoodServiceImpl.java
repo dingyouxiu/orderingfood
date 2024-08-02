@@ -23,6 +23,11 @@ public class WechatFoodServiceImpl implements WechatFoodService {
     @Autowired
     private FoodService foodService;
 
+    /**
+     * 新增
+     * @param foodDTOList
+     * @return
+     */
     @Override
     public Boolean saveBath(List<FoodDTO> foodDTOList) {
         if (CollectionUtils.isEmpty(foodDTOList)) {
@@ -34,6 +39,11 @@ public class WechatFoodServiceImpl implements WechatFoodService {
         return foodService.saveBatch(foodEntityList);
     }
 
+    /**
+     * 删除-批量
+     * @param foodIdList
+     * @return
+     */
     @Override
     public Boolean deleteBath(List<Long> foodIdList) {
         if (CollectionUtils.isEmpty(foodIdList)) {
@@ -43,6 +53,11 @@ public class WechatFoodServiceImpl implements WechatFoodService {
         return foodService.removeByIds(foodIdList);
     }
 
+    /**
+     * 编辑
+     * @param foodDTO
+     * @return
+     */
     @Override
     public FoodDTO edit(FoodDTO foodDTO) {
         if (Objects.isNull(foodDTO)) {
