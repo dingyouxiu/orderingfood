@@ -29,6 +29,13 @@ public enum BaseStatus {
 
     SUCCESS(0, "success", "成功"),
     FAILED(1, "failed", "失败"),
+
+    /**
+     * 参数异常
+     */
+    PARAMETER_MISS(1000, "parameter is missing", "参数不能为空"),
+
+
     ;
 
     private final int code;

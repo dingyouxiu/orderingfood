@@ -4,15 +4,22 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.OrderDTO;
+import com.dyx.ordering.baseseriver.dto.OrderFoodDTO;
 import com.dyx.ordering.baseseriver.entity.OrderEntity;
+import com.dyx.ordering.baseseriver.entity.OrderFoodEntity;
 import com.dyx.ordering.baseseriver.entity.converter.OrderEntityConverter;
+import com.dyx.ordering.baseseriver.entity.converter.OrderFoodEntityConverter;
 import com.dyx.ordering.baseseriver.service.BaseOrderService;
 import com.dyx.ordering.baseseriver.service.impl.BaseOrderServiceImpl;
+import com.dyx.ordering.common.enums.BaseStatus;
 import com.dyx.ordering.common.utils.PageUtil;
+import com.dyx.ordering.exception.ServiceException;
 import com.dyx.ordering.wechat.query.WechatOrderQuery;
 import com.dyx.ordering.wechat.service.WechatOrderService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +33,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl<BaseOrderServic
      * @return
      */
     @Override
+    @Transactional
     public Boolean saveBath(List<OrderDTO> orderDTOList) {
         if (CollectionUtils.isEmpty(orderDTOList)) {
             return Boolean.FALSE;
@@ -42,6 +50,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl<BaseOrderServic
      * @return
      */
     @Override
+    @Transactional
     public Boolean deleteBath(List<Long> orderIdList) {
         if (CollectionUtils.isEmpty(orderIdList)) {
             return Boolean.FALSE;
@@ -56,6 +65,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl<BaseOrderServic
      * @return
      */
     @Override
+    @Transactional
     public Boolean edit(OrderDTO orderDTO) {
         if (Objects.isNull(orderDTO)) {
             return Boolean.FALSE;
@@ -78,6 +88,31 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl<BaseOrderServic
         expandAttributes(orderDTOIPage.getRecords());
 
         return orderDTOIPage;
+    }
+
+    @Override
+    @Transactional
+    public OrderDTO addOns(OrderDTO orderDTO) {
+        if (Objects.isNull(orderDTO)) {
+            throw new ServiceException(BaseStatus.PARAMETER_MISS);
+        }
+
+
+
+        return null;
+    }
+
+    private void addOnsNewOrder(OrderDTO orderDTO){
+
+        // 保存订单
+        OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
+        boolean saveOrder = this.baseService.save(orderEntity);
+
+        // 保存订单商品
+        List<OrderFoodDTO> orderFoodDTOList = orderDTO.getOrderFoodDTOList();
+        List<OrderFoodEntity> orderFoodEntityList = OrderFoodEntityConverter.INSTANCE.toEntityList(orderFoodDTOList);
+
+
     }
 
     private LambdaQueryWrapper<OrderEntity> buildQueryWrapper(WechatOrderQuery query){

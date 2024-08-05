@@ -44,4 +44,10 @@ public class OrderController {
         return Result.success(wechatOrderService.queryPage(orderQuery));
     }
 
+    @PostMapping("/add-ons")
+    @ApiOperation(value = "加购", notes = "加购")
+    public Result<OrderDTO> addOns(@RequestBody OrderDTO orderDTO) {
+        return Result.success(wechatOrderService.addOns(orderDTO));
+    }
+
 }

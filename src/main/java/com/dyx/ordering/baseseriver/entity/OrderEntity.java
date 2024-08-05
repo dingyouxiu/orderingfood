@@ -18,6 +18,9 @@ public class OrderEntity extends BaseEntity {
     @ApiModelProperty(value = "商品名称")
     private String name;
 
+    @ApiModelProperty(value = "流水码：格式00x")
+    private Long serialNumber;
+
     @ApiModelProperty(value = "点餐窗口")
     private Long windowId;
 

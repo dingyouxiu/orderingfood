@@ -42,4 +42,9 @@ public final class BaseConstants {
      * UTF-8
      */
     public static final String UTF_8 = "UTF-8";
+
+    /**
+     * 获取取餐吗失败重试次数
+     */
+    public static final Integer RETRY_NUMBER = 5;
 }
