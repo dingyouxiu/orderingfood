@@ -6,22 +6,19 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.OrderDTO;
 import com.dyx.ordering.baseseriver.entity.OrderEntity;
 import com.dyx.ordering.baseseriver.entity.converter.OrderEntityConverter;
-import com.dyx.ordering.baseseriver.service.OrderService;
+import com.dyx.ordering.baseseriver.service.BaseOrderService;
+import com.dyx.ordering.baseseriver.service.impl.BaseOrderServiceImpl;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.wechat.query.WechatOrderQuery;
 import com.dyx.ordering.wechat.service.WechatOrderService;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
-public class WechatOrderServiceImpl implements WechatOrderService {
-
-    @Autowired
-    private OrderService orderService;
+public class WechatOrderServiceImpl extends BaseOrderServiceImpl<BaseOrderService> implements WechatOrderService {
 
     /**
      * 新增
@@ -36,7 +33,7 @@ public class WechatOrderServiceImpl implements WechatOrderService {
 
         List<OrderEntity> orderEntityList = OrderEntityConverter.INSTANCE.toEntityList(orderDTOList);
 
-        return orderService.saveBatch(orderEntityList);
+        return this.baseService.saveBatch(orderEntityList);
     }
 
     /**
@@ -50,7 +47,7 @@ public class WechatOrderServiceImpl implements WechatOrderService {
             return Boolean.FALSE;
         }
 
-        return orderService.removeByIds(orderIdList);
+        return this.baseService.removeByIds(orderIdList);
     }
 
     /**
@@ -64,7 +61,7 @@ public class WechatOrderServiceImpl implements WechatOrderService {
             return Boolean.FALSE;
         }
 
-        return orderService.updateById(orderDTO);
+        return this.baseService.updateById(orderDTO);
     }
 
     /**
@@ -76,7 +73,7 @@ public class WechatOrderServiceImpl implements WechatOrderService {
     public IPage<OrderDTO> queryPage(WechatOrderQuery orderQuery) {
 
         IPage<OrderEntity> orderEntityIPage =
-                orderService.page(PageUtil.buildPage(orderQuery), buildQueryWrapper(orderQuery));
+                this.baseService.page(PageUtil.buildPage(orderQuery), buildQueryWrapper(orderQuery));
         IPage<OrderDTO> orderDTOIPage = OrderEntityConverter.INSTANCE.toIPageDTO(orderEntityIPage);
         expandAttributes(orderDTOIPage.getRecords());
 
