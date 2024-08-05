@@ -6,19 +6,19 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.FoodDTO;
 import com.dyx.ordering.baseseriver.entity.FoodEntity;
 import com.dyx.ordering.baseseriver.entity.converter.FoodEntityConverter;
-import com.dyx.ordering.baseseriver.service.BaseFoodService;
 import com.dyx.ordering.baseseriver.service.impl.BaseFoodServiceImpl;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.wechat.query.WechatFoodQuery;
 import com.dyx.ordering.wechat.service.WechatFoodService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
-public class WechatFoodServiceImpl extends BaseFoodServiceImpl<BaseFoodService> implements WechatFoodService{
+public class WechatFoodServiceImpl extends BaseFoodServiceImpl implements WechatFoodService{
 
     /**
      * 新增
@@ -26,6 +26,7 @@ public class WechatFoodServiceImpl extends BaseFoodServiceImpl<BaseFoodService> 
      * @return
      */
     @Override
+    @Transactional
     public Boolean saveBath(List<FoodDTO> foodDTOList) {
         if (CollectionUtils.isEmpty(foodDTOList)) {
             return Boolean.FALSE;
@@ -33,7 +34,7 @@ public class WechatFoodServiceImpl extends BaseFoodServiceImpl<BaseFoodService> 
 
         List<FoodEntity> foodEntityList = FoodEntityConverter.INSTANCE.toEntityList(foodDTOList);
 
-        return this.baseService.saveBatch(foodEntityList);
+        return this.saveBatch(foodEntityList);
     }
 
     /**
@@ -42,12 +43,13 @@ public class WechatFoodServiceImpl extends BaseFoodServiceImpl<BaseFoodService> 
      * @return
      */
     @Override
+    @Transactional
     public Boolean deleteBath(List<Long> foodIdList) {
         if (CollectionUtils.isEmpty(foodIdList)) {
             return Boolean.FALSE;
         }
 
-        return this.baseService.removeByIds(foodIdList);
+        return this.removeByIds(foodIdList);
     }
 
     /**
@@ -56,12 +58,13 @@ public class WechatFoodServiceImpl extends BaseFoodServiceImpl<BaseFoodService> 
      * @return
      */
     @Override
+    @Transactional
     public FoodDTO edit(FoodDTO foodDTO) {
         if (Objects.isNull(foodDTO)) {
             return foodDTO;
         }
 
-        this.baseService.updateById(foodDTO);
+        this.updateById(foodDTO);
 
         return foodDTO;
     }
@@ -72,10 +75,11 @@ public class WechatFoodServiceImpl extends BaseFoodServiceImpl<BaseFoodService> 
      * @return
      */
     @Override
+    @Transactional
     public IPage<FoodDTO> queryPage(WechatFoodQuery wechatFoodQuery) {
 
         IPage<FoodEntity> foodEntityIPage =
-                this.baseService.page(PageUtil.buildPage(wechatFoodQuery), buildQueryWrapper(wechatFoodQuery));
+                this.page(PageUtil.buildPage(wechatFoodQuery), buildQueryWrapper(wechatFoodQuery));
         IPage<FoodDTO> foodDTOIPage = FoodEntityConverter.INSTANCE.toIPageDTO(foodEntityIPage);
 
         expandAttributes(foodDTOIPage.getRecords());

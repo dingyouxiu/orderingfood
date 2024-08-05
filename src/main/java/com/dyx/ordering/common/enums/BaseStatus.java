@@ -33,9 +33,14 @@ public enum BaseStatus {
     /**
      * 参数异常
      */
-    PARAMETER_MISS(1000, "parameter is missing", "参数不能为空"),
+    PARAMETER_MISS(10000, "parameter is missing", "参数不能为空"),
 
-
+    /**
+     * 订单异常
+     */
+    ORDER_SAVE_ERROR(11000, "order save error", "订单保存异常"),
+    ORDER_EDIT_ERROR(11001, "order edit error", "订单编辑异常"),
+    ORDER_PURCHASE_ERROR(11002, "order purchase error", "下单失败"),
     ;
 
     private final int code;

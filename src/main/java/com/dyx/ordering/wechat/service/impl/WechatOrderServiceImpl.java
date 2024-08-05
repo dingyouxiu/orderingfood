@@ -6,26 +6,31 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.OrderDTO;
 import com.dyx.ordering.baseseriver.dto.OrderFoodDTO;
 import com.dyx.ordering.baseseriver.entity.OrderEntity;
-import com.dyx.ordering.baseseriver.entity.OrderFoodEntity;
 import com.dyx.ordering.baseseriver.entity.converter.OrderEntityConverter;
-import com.dyx.ordering.baseseriver.entity.converter.OrderFoodEntityConverter;
-import com.dyx.ordering.baseseriver.service.BaseOrderService;
 import com.dyx.ordering.baseseriver.service.impl.BaseOrderServiceImpl;
 import com.dyx.ordering.common.enums.BaseStatus;
+import com.dyx.ordering.common.enums.OrderStatus;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.exception.ServiceException;
+import com.dyx.ordering.wechat.query.WechatOrderFoodQuery;
 import com.dyx.ordering.wechat.query.WechatOrderQuery;
+import com.dyx.ordering.wechat.service.WechatOrderFoodService;
 import com.dyx.ordering.wechat.service.WechatOrderService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
-public class WechatOrderServiceImpl extends BaseOrderServiceImpl<BaseOrderService> implements WechatOrderService {
+public class WechatOrderServiceImpl extends BaseOrderServiceImpl implements WechatOrderService {
+
+    @Autowired
+    private WechatOrderFoodService wechatOrderFoodService;
 
     /**
      * 新增
@@ -41,7 +46,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl<BaseOrderServic
 
         List<OrderEntity> orderEntityList = OrderEntityConverter.INSTANCE.toEntityList(orderDTOList);
 
-        return this.baseService.saveBatch(orderEntityList);
+        return this.saveBatch(orderEntityList);
     }
 
     /**
@@ -56,7 +61,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl<BaseOrderServic
             return Boolean.FALSE;
         }
 
-        return this.baseService.removeByIds(orderIdList);
+        return this.removeByIds(orderIdList);
     }
 
     /**
@@ -71,7 +76,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl<BaseOrderServic
             return Boolean.FALSE;
         }
 
-        return this.baseService.updateById(orderDTO);
+        return this.updateById(orderDTO);
     }
 
     /**
@@ -83,7 +88,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl<BaseOrderServic
     public IPage<OrderDTO> queryPage(WechatOrderQuery orderQuery) {
 
         IPage<OrderEntity> orderEntityIPage =
-                this.baseService.page(PageUtil.buildPage(orderQuery), buildQueryWrapper(orderQuery));
+                this.page(PageUtil.buildPage(orderQuery), buildQueryWrapper(orderQuery));
         IPage<OrderDTO> orderDTOIPage = OrderEntityConverter.INSTANCE.toIPageDTO(orderEntityIPage);
         expandAttributes(orderDTOIPage.getRecords());
 
@@ -97,22 +102,125 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl<BaseOrderServic
             throw new ServiceException(BaseStatus.PARAMETER_MISS);
         }
 
+        // 新增订单
+        if (Objects.isNull(orderDTO.getId())) {
+            addOnsNewOrder(orderDTO);
+        }
 
+        // 修改订单
+        if (Objects.nonNull(orderDTO.getId())) {
+            addOnsUpdateOrder(orderDTO);
+        }
 
-        return null;
+        return orderDTO;
     }
 
+    /**
+     * 订单新增
+     * @param orderDTO
+     */
     private void addOnsNewOrder(OrderDTO orderDTO){
-
-        // 保存订单
-        OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
-        boolean saveOrder = this.baseService.save(orderEntity);
 
         // 保存订单商品
         List<OrderFoodDTO> orderFoodDTOList = orderDTO.getOrderFoodDTOList();
-        List<OrderFoodEntity> orderFoodEntityList = OrderFoodEntityConverter.INSTANCE.toEntityList(orderFoodDTOList);
 
+        // 计算价格
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        for (OrderFoodDTO orderFoodDTO : orderFoodDTOList) {
+            BigDecimal foodPrice = orderFoodDTO.getPrice();
+            BigDecimal discount = orderFoodDTO.getDiscount();
+            BigDecimal num = BigDecimal.valueOf(orderFoodDTO.getNum());
+            BigDecimal realityPrice = foodPrice.multiply(discount).multiply(num);
+            totalPrice = totalPrice.add(realityPrice);
+        }
+        Boolean saveOrderFoodList = wechatOrderFoodService.saveBath(orderFoodDTOList);
 
+        // 保存订单
+        OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
+        orderEntity.setTotalPrice(totalPrice);
+        boolean saveOrder = this.save(orderEntity);
+
+        if (!(saveOrder && saveOrderFoodList)) {
+            throw new ServiceException(BaseStatus.ORDER_SAVE_ERROR);
+        }
+
+    }
+
+    /**
+     * 订单编辑
+     * @param orderDTO
+     */
+    private void addOnsUpdateOrder(OrderDTO orderDTO){
+
+        // 查询订单中已存在商品
+        WechatOrderFoodQuery wechatOrderFoodQuery =
+                WechatOrderFoodQuery.builder()
+                        .orderId(orderDTO.getId())
+                        .build();
+        List<OrderFoodDTO> orderFoodDTOListInDB =
+                wechatOrderFoodService.queryList(wechatOrderFoodQuery);
+
+        // 保存订单商品
+        List<OrderFoodDTO> orderFoodDTOList = orderDTO.getOrderFoodDTOList();
+        // 新增商品
+        List<OrderFoodDTO> newOrderFoodDTOList =
+                orderFoodDTOList
+                        .stream()
+                        .filter(orderFoodDTO -> Objects.isNull(orderFoodDTO.getId()))
+                        .collect(Collectors.toList());
+        Boolean saveOrderFoodResult = wechatOrderFoodService.saveBath(newOrderFoodDTOList);
+
+        // 修改商品
+        List<OrderFoodDTO> updateOrderFoodDTOList =
+                orderFoodDTOList
+                        .stream()
+                        .filter(orderFoodDTO -> Objects.nonNull(orderFoodDTO.getId()))
+                        .collect(Collectors.toList());
+        Boolean updateOrderFoodResult = wechatOrderFoodService.editBath(updateOrderFoodDTOList);
+
+        // 计算价格
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        for (OrderFoodDTO orderFoodDTO : orderFoodDTOList) {
+            BigDecimal foodPrice = orderFoodDTO.getPrice();
+            BigDecimal discount = orderFoodDTO.getDiscount();
+            BigDecimal num = BigDecimal.valueOf(orderFoodDTO.getNum());
+            BigDecimal realityPrice = foodPrice.multiply(discount).multiply(num);
+            totalPrice = totalPrice.add(realityPrice);
+        }
+
+        // 更新订单
+        OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
+        orderEntity.setTotalPrice(totalPrice);
+        boolean updateOrderResult = this.updateById(orderEntity);
+
+        if (!(updateOrderResult && saveOrderFoodResult && updateOrderFoodResult)) {
+            throw new ServiceException(BaseStatus.ORDER_SAVE_ERROR);
+        }
+
+    }
+
+    /**
+     * 下单
+     * @param orderDTO
+     * @return
+     */
+    @Override
+    public OrderDTO purchase(OrderDTO orderDTO) {
+        if (Objects.isNull(orderDTO)) {
+            throw new ServiceException(BaseStatus.PARAMETER_MISS);
+        }
+
+        OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
+        orderEntity.setState(OrderStatus.NOT_APPRAISE.getCode());
+        // TODO 生成流水码
+        orderEntity.setSerialNumber(null);
+
+        boolean updateOrderResult = this.updateById(orderDTO);
+        if (!updateOrderResult) {
+            throw new ServiceException(BaseStatus.ORDER_PURCHASE_ERROR);
+        }
+
+        return orderDTO;
     }
 
     private LambdaQueryWrapper<OrderEntity> buildQueryWrapper(WechatOrderQuery query){

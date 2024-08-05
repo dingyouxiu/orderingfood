@@ -8,7 +8,11 @@ import com.dyx.ordering.wechat.service.WechatOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -48,6 +52,12 @@ public class OrderController {
     @ApiOperation(value = "加购", notes = "加购")
     public Result<OrderDTO> addOns(@RequestBody OrderDTO orderDTO) {
         return Result.success(wechatOrderService.addOns(orderDTO));
+    }
+
+    @PostMapping("/purchase")
+    @ApiOperation(value = "购买", notes = "购买")
+    public Result<OrderDTO> purchase(@RequestBody OrderDTO orderDTO) {
+        return Result.success(wechatOrderService.purchase(orderDTO));
     }
 
 }

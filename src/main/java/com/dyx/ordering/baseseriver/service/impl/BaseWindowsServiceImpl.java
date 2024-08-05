@@ -6,12 +6,6 @@ import com.dyx.ordering.baseseriver.mapper.BaseWindowsMapper;
 import com.dyx.ordering.baseseriver.service.BaseWindowsService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-
 @Service
-public class BaseWindowsServiceImpl<T> extends ServiceImpl<BaseWindowsMapper, WindowsEntity> implements BaseWindowsService {
-
-    @Resource
-    protected T baseService;
-
+public class BaseWindowsServiceImpl extends ServiceImpl<BaseWindowsMapper, WindowsEntity> implements BaseWindowsService {
 }

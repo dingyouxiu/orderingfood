@@ -6,12 +6,6 @@ import com.dyx.ordering.baseseriver.mapper.BaseOrderFoodMapper;
 import com.dyx.ordering.baseseriver.service.BaseOrderFoodService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-
 @Service
-public class BaseOrderFoodServiceImpl<T> extends ServiceImpl<BaseOrderFoodMapper, OrderFoodEntity> implements BaseOrderFoodService {
-
-    @Resource
-    protected T baseService;
-
+public class BaseOrderFoodServiceImpl extends ServiceImpl<BaseOrderFoodMapper, OrderFoodEntity> implements BaseOrderFoodService {
 }

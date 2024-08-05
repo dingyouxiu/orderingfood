@@ -33,7 +33,7 @@ public class OrderEntity extends BaseEntity {
     @ApiModelProperty(value = "评论")
     private String comments;
 
-    @ApiModelProperty(value = "订单状态（1支付，2待评价，3已评价）")
+    @ApiModelProperty(value = "订单状态（0加购，1待评价，2已评价）")
     private Integer state;
 
 }

@@ -16,4 +16,6 @@ public interface WechatOrderService {
     IPage<OrderDTO> queryPage(WechatOrderQuery orderQuery);
 
     OrderDTO addOns(OrderDTO orderDTO);
+
+    OrderDTO purchase(OrderDTO orderDTO);
 }
