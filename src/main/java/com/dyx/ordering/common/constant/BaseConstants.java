@@ -24,17 +24,17 @@ public final class BaseConstants {
     }
 
     /**
-     * http connect time out
+     * HTTP 连接超时时间
      */
     public static final int HTTP_CONNECT_TIMEOUT = 60 * 1000;
 
     /**
-     * http connect request time out
+     * HTTP 连接请求超时时间
      */
     public static final int HTTP_CONNECTION_REQUEST_TIMEOUT = 60 * 1000;
 
     /**
-     * httpclient soceket time out
+     * HTTP 长连接超时时间
      */
     public static final int SOCKET_TIMEOUT = 60 * 1000;
 

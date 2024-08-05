@@ -5,5 +5,5 @@ import com.dyx.ordering.baseseriver.entity.FoodEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface FoodMapper extends BaseMapper<FoodEntity> {
+public interface BaseFoodMapper extends BaseMapper<FoodEntity> {
 }
