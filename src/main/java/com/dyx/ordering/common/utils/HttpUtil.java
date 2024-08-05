@@ -52,7 +52,7 @@ import java.util.Map;
  * HTTP utilities class with secure SSL context.
  */
 @Slf4j
-public class HttpUtils {
+public class HttpUtil {
 
     private static final PoolingHttpClientConnectionManager cm;
     private static final SSLContext ctx;
@@ -93,7 +93,7 @@ public class HttpUtils {
     }
 
     // Private constructor to prevent instantiation
-    private HttpUtils() {
+    private HttpUtil() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
@@ -125,7 +125,7 @@ public class HttpUtils {
     public static String get(String url,
                              Map<String, String> headers,
                              String charset) {
-        CloseableHttpClient httpclient = HttpUtils.getInstance();
+        CloseableHttpClient httpclient = HttpUtil.getInstance();
         HttpGet httpGet = new HttpGet(url);
         if (MapUtils.isNotEmpty(headers)) {
             headers.forEach(httpGet::setHeader);
@@ -155,7 +155,7 @@ public class HttpUtils {
 
     public static String post(String url, Map<String, String> headers, String params) {
         String result = "";
-        CloseableHttpClient httpClient = HttpUtils.getInstance();
+        CloseableHttpClient httpClient = HttpUtil.getInstance();
 
         HttpPost httpPost = new HttpPost(url);
         try {

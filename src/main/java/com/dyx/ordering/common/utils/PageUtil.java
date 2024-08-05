@@ -6,7 +6,7 @@ import com.dyx.ordering.common.entity.Query;
 
 import java.util.Objects;
 
-public class PageUtils {
+public class PageUtil {
 
     /**
      * 构造分页器

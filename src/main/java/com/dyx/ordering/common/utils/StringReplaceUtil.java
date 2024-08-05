@@ -4,7 +4,7 @@ import org.apache.commons.text.StringSubstitutor;
 
 import java.util.Map;
 
-public class StringReplaceUtils {
+public class StringReplaceUtil {
 
     /**
      * 根据字符串中占位符名称进行替换

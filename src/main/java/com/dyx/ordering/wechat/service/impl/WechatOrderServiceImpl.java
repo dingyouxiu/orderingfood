@@ -7,7 +7,7 @@ import com.dyx.ordering.baseseriver.dto.OrderDTO;
 import com.dyx.ordering.baseseriver.entity.OrderEntity;
 import com.dyx.ordering.baseseriver.entity.converter.OrderEntityConverter;
 import com.dyx.ordering.baseseriver.service.OrderService;
-import com.dyx.ordering.common.utils.PageUtils;
+import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.wechat.query.WechatOrderQuery;
 import com.dyx.ordering.wechat.service.WechatOrderService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -76,7 +76,7 @@ public class WechatOrderServiceImpl implements WechatOrderService {
     public IPage<OrderDTO> queryPage(WechatOrderQuery orderQuery) {
 
         IPage<OrderEntity> orderEntityIPage =
-                orderService.page(PageUtils.buildPage(orderQuery), buildQueryWrapper(orderQuery));
+                orderService.page(PageUtil.buildPage(orderQuery), buildQueryWrapper(orderQuery));
         IPage<OrderDTO> orderDTOIPage = OrderEntityConverter.INSTANCE.toIPageDTO(orderEntityIPage);
         expandAttributes(orderDTOIPage.getRecords());
 
