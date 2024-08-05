@@ -8,15 +8,6 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper
-public interface UserEntityConverter {
+public interface UserEntityConverter extends BaseObjectConverter<UserEntity, UserDTO> {
     UserEntityConverter INSTANCE = Mappers.getMapper(UserEntityConverter.class);
-
-    UserDTO toDTO(UserEntity userEntity);
-
-    List<UserDTO> toDTOList(List<UserEntity> userEntityList);
-
-    List<UserEntity> toEntityList(List<UserDTO> userDTOList);
-
-    UserEntity toEntity(UserDTO userDTO);
-
 }

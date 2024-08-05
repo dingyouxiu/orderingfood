@@ -1,10 +1,8 @@
 package com.dyx.ordering.wechat.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.dyx.ordering.baseseriver.dto.FoodDTO;
 import com.dyx.ordering.baseseriver.dto.OrderDTO;
 import com.dyx.ordering.result.Result;
-import com.dyx.ordering.wechat.query.WechatFoodQuery;
 import com.dyx.ordering.wechat.query.WechatOrderQuery;
 import com.dyx.ordering.wechat.service.WechatOrderService;
 import io.swagger.annotations.Api;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/wechat/food")
+@RequestMapping("/wechat/order")
 @Api(value = "小程序", tags = "订单板块")
 public class OrderController {
 

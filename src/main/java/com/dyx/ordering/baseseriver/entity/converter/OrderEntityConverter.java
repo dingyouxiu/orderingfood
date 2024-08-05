@@ -11,19 +11,6 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper
-public interface OrderEntityConverter {
+public interface OrderEntityConverter extends BaseObjectConverter<OrderEntity, OrderDTO> {
     OrderEntityConverter INSTANCE = Mappers.getMapper(OrderEntityConverter.class);
-
-    OrderDTO toDTO(OrderEntity orderEntity);
-
-    List<OrderDTO> toDTOList(List<OrderEntity> orderEntityList);
-
-    List<OrderEntity> toEntityList(List<OrderDTO> orderDTOList);
-
-    OrderEntity toEntity(OrderDTO orderDTO);
-
-    default IPage<OrderDTO> toIPageDTO(IPage<OrderEntity> orderEntityIPage) {
-        return orderEntityIPage.convert(this::toDTO);
-    }
-
 }
