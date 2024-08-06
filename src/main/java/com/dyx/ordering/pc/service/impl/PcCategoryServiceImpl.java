@@ -1,15 +1,15 @@
-package com.dyx.ordering.app.service.impl;
+package com.dyx.ordering.pc.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.dyx.ordering.app.query.AppCategoryQuery;
-import com.dyx.ordering.app.service.AppCategoryService;
 import com.dyx.ordering.baseseriver.dto.CategoryDTO;
 import com.dyx.ordering.baseseriver.entity.CategoryEntity;
 import com.dyx.ordering.baseseriver.entity.converter.CategoryEntityConverter;
 import com.dyx.ordering.baseseriver.service.impl.BaseCategoryServiceImpl;
 import com.dyx.ordering.common.utils.PageUtil;
+import com.dyx.ordering.pc.query.PcCategoryQuery;
+import com.dyx.ordering.pc.service.PcCategoryService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class AppCategoryServiceImpl extends BaseCategoryServiceImpl implements AppCategoryService {
+public class PcCategoryServiceImpl extends BaseCategoryServiceImpl implements PcCategoryService {
 
     /**
      * 新增
@@ -75,7 +75,7 @@ public class AppCategoryServiceImpl extends BaseCategoryServiceImpl implements A
      * @return
      */
     @Override
-    public IPage<CategoryDTO> queryPage(AppCategoryQuery wechatCategoryQuery) {
+    public IPage<CategoryDTO> queryPage(PcCategoryQuery wechatCategoryQuery) {
 
         IPage<CategoryEntity> categoryEntityIPage =
                 this.page(PageUtil.buildPage(wechatCategoryQuery), buildQueryWrapper(wechatCategoryQuery));
@@ -94,7 +94,7 @@ public class AppCategoryServiceImpl extends BaseCategoryServiceImpl implements A
         return CategoryEntityConverter.INSTANCE.toDTOList(categoryEntityList);
     }
 
-    private LambdaQueryWrapper<CategoryEntity> buildQueryWrapper(AppCategoryQuery query){
+    private LambdaQueryWrapper<CategoryEntity> buildQueryWrapper(PcCategoryQuery query){
         return Wrappers.<CategoryEntity>lambdaQuery()
                 ;
     }

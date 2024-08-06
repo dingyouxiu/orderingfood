@@ -15,4 +15,6 @@ public interface AppCategoryService {
     CategoryDTO edit(CategoryDTO categoryDTO);
 
     IPage<CategoryDTO> queryPage(AppCategoryQuery categoryQuery);
+
+    List<CategoryDTO> queryList();
 }

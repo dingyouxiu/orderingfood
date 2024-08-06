@@ -1,9 +1,9 @@
-package com.dyx.ordering.app.controller;
+package com.dyx.ordering.pc.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.dyx.ordering.app.query.AppOrderQuery;
-import com.dyx.ordering.app.service.AppOrderService;
 import com.dyx.ordering.baseseriver.dto.OrderDTO;
+import com.dyx.ordering.pc.query.PcOrderQuery;
+import com.dyx.ordering.pc.service.PcOrderService;
 import com.dyx.ordering.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/app/order")
-@Api(value = "APP端", tags = "订单板块")
-public class AppOrderController {
+@RequestMapping("/pc/order")
+@Api(value = "PC端", tags = "订单板块")
+public class PcOrderController {
 
     @Autowired
-    private AppOrderService wechatOrderService;
+    private PcOrderService wechatOrderService;
 
     @PostMapping("/save-bath")
     @ApiOperation(value = "新增", notes = "新增")
@@ -40,7 +40,7 @@ public class AppOrderController {
 
     @GetMapping("/page")
     @ApiOperation(value = "分页查询", notes = "分页查询")
-    public Result<IPage<OrderDTO>> queryPage(AppOrderQuery orderQuery) {
+    public Result<IPage<OrderDTO>> queryPage(PcOrderQuery orderQuery) {
         return Result.success(wechatOrderService.queryPage(orderQuery));
     }
 

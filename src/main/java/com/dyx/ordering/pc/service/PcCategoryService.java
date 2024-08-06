@@ -1,12 +1,12 @@
-package com.dyx.ordering.wechat.service;
+package com.dyx.ordering.pc.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.dyx.ordering.baseseriver.dto.CategoryDTO;
-import com.dyx.ordering.wechat.query.WechatCategoryQuery;
+import com.dyx.ordering.pc.query.PcCategoryQuery;
 
 import java.util.List;
 
-public interface WechatCategoryService {
+public interface PcCategoryService {
 
     Boolean saveBath(List<CategoryDTO> categoryDTOList);
 
@@ -14,7 +14,7 @@ public interface WechatCategoryService {
 
     CategoryDTO edit(CategoryDTO categoryDTO);
 
-    IPage<CategoryDTO> queryPage(WechatCategoryQuery categoryQuery);
+    IPage<CategoryDTO> queryPage(PcCategoryQuery categoryQuery);
 
     List<CategoryDTO> queryList();
 }

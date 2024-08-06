@@ -14,6 +14,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -84,6 +85,14 @@ public class WechatCategoryServiceImpl extends BaseCategoryServiceImpl implement
         expandAttributes(categoryDTOIPage.getRecords());
 
         return categoryDTOIPage;
+    }
+
+    @Override
+    public List<CategoryDTO> queryList() {
+
+        List<CategoryEntity> categoryEntityList = this.list();
+
+        return CategoryEntityConverter.INSTANCE.toDTOList(categoryEntityList);
     }
 
     private LambdaQueryWrapper<CategoryEntity> buildQueryWrapper(WechatCategoryQuery query){
