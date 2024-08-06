@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/wechat/food")
 @Api(value = "小程序", tags = "商品板块")
-public class FoodController {
+public class WechatFoodController {
 
     @Autowired
     private WechatFoodService wechatFoodService;

@@ -8,10 +8,12 @@ import com.dyx.ordering.baseseriver.dto.OrderFoodDTO;
 import com.dyx.ordering.baseseriver.entity.OrderEntity;
 import com.dyx.ordering.baseseriver.entity.converter.OrderEntityConverter;
 import com.dyx.ordering.baseseriver.service.impl.BaseOrderServiceImpl;
+import com.dyx.ordering.common.constant.BaseConstants;
 import com.dyx.ordering.common.enums.BaseStatus;
 import com.dyx.ordering.common.enums.OrderStatus;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.exception.ServiceException;
+import com.dyx.ordering.wechat.mapper.WechatOrderMapper;
 import com.dyx.ordering.wechat.query.WechatOrderFoodQuery;
 import com.dyx.ordering.wechat.query.WechatOrderQuery;
 import com.dyx.ordering.wechat.service.WechatOrderFoodService;
@@ -19,18 +21,31 @@ import com.dyx.ordering.wechat.service.WechatOrderService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Service
 public class WechatOrderServiceImpl extends BaseOrderServiceImpl implements WechatOrderService {
+    private final ReentrantLock reentrantLock = new ReentrantLock();
 
     @Autowired
     private WechatOrderFoodService wechatOrderFoodService;
+
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+
+    @Autowired
+    private WechatOrderMapper wechatOrderMapper;
 
     /**
      * 新增
@@ -210,13 +225,42 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl implements Wech
             throw new ServiceException(BaseStatus.PARAMETER_MISS);
         }
 
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setName("purchaseTransaction");
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus status = transactionManager.getTransaction(def);
+
         OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
         orderEntity.setState(OrderStatus.NOT_APPRAISE.getCode());
-        // TODO 生成流水码
-        orderEntity.setSerialNumber(null);
 
-        boolean updateOrderResult = this.updateById(orderDTO);
-        if (!updateOrderResult) {
+        // 解决并发流水码重复问题
+        int retryNum = 0;
+        do {
+            if (reentrantLock.tryLock()) {
+                try {
+                    // 生成流水码
+                    Long serialNumberMax = wechatOrderMapper.selectSerialNumberMax();
+                    orderEntity.setSerialNumber(++serialNumberMax);
+
+                    boolean updateOrderResult = this.updateById(orderDTO);
+                    if (!updateOrderResult) {
+                        throw new ServiceException(BaseStatus.ORDER_PURCHASE_ERROR);
+                    }
+
+                    // 手动提交事务
+                    transactionManager.commit(status);
+                    break;
+                }catch (Exception exception){
+                    transactionManager.rollback(status);
+                    throw new ServiceException(BaseStatus.ORDER_PURCHASE_ERROR);
+                }finally {
+                    reentrantLock.unlock();
+                }
+            }
+        }while (++retryNum <= BaseConstants.RETRY_NUMBER);
+
+        if (retryNum > BaseConstants.RETRY_NUMBER) {
+            transactionManager.rollback(status);
             throw new ServiceException(BaseStatus.ORDER_PURCHASE_ERROR);
         }
 

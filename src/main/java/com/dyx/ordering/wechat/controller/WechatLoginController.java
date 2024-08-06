@@ -6,7 +6,7 @@ import com.dyx.ordering.common.utils.StringReplaceUtil;
 import com.dyx.ordering.result.Result;
 import com.dyx.ordering.baseseriver.dto.UserDTO;
 import com.dyx.ordering.baseseriver.entity.UserEntity;
-import com.dyx.ordering.wechat.service.LoginService;
+import com.dyx.ordering.wechat.service.WechatLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +17,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/wechat")
-public class LoginController {
+public class WechatLoginController {
 
     @Autowired
-    private LoginService loginService;
+    private WechatLoginService loginService;
 
     @GetMapping("/login")
     public Result<UserDTO> login() {

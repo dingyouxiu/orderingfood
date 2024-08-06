@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/wechat/order")
 @Api(value = "小程序", tags = "订单板块")
-public class OrderController {
+public class WechatOrderController {
 
     @Autowired
     private WechatOrderService wechatOrderService;
