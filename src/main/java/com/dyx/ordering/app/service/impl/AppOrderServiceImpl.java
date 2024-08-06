@@ -171,8 +171,6 @@ public class AppOrderServiceImpl extends BaseOrderServiceImpl implements AppOrde
                 AppOrderFoodQuery.builder()
                         .orderId(orderDTO.getId())
                         .build();
-        List<OrderFoodDTO> orderFoodDTOListInDB =
-                wechatOrderFoodService.queryList(wechatOrderFoodQuery);
 
         // 保存订单商品
         List<OrderFoodDTO> orderFoodDTOList = orderDTO.getOrderFoodDTOList();
