@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.basedao.dto.FoodDTO;
 import com.dyx.ordering.basedao.entity.FoodEntity;
 import com.dyx.ordering.basedao.entity.converter.FoodEntityConverter;
-import com.dyx.ordering.basedao.service.BaseFoodIDao;
+import com.dyx.ordering.basedao.dao.BaseFoodIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.pc.query.PcFoodQuery;
 import com.dyx.ordering.pc.service.PcFoodService;

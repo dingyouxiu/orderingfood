@@ -8,7 +8,7 @@ import com.dyx.ordering.app.service.AppOrderFoodService;
 import com.dyx.ordering.basedao.dto.OrderFoodDTO;
 import com.dyx.ordering.basedao.entity.OrderFoodEntity;
 import com.dyx.ordering.basedao.entity.converter.OrderFoodEntityConverter;
-import com.dyx.ordering.basedao.service.BaseOrderFoodIDao;
+import com.dyx.ordering.basedao.dao.BaseOrderFoodIDao;
 import com.dyx.ordering.common.enums.BaseStatus;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.exception.ServiceException;
@@ -133,5 +133,10 @@ public class AppOrderFoodServiceImpl implements AppOrderFoodService {
         for (OrderFoodDTO orderFoodDTO : orderFoodDTOList) {
 
         }
+    }
+
+    @Override
+    public BaseOrderFoodIDao getBaseIDao() {
+        return this.baseOrderFoodIDao;
     }
 }

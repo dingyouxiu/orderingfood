@@ -8,7 +8,7 @@ import com.dyx.ordering.app.service.AppWindowsService;
 import com.dyx.ordering.basedao.dto.WindowsDTO;
 import com.dyx.ordering.basedao.entity.WindowsEntity;
 import com.dyx.ordering.basedao.entity.converter.WindowsEntityConverter;
-import com.dyx.ordering.basedao.service.BaseWindowsIDao;
+import com.dyx.ordering.basedao.dao.BaseWindowsIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,5 +103,10 @@ public class AppWindowsServiceImpl implements AppWindowsService {
         for (WindowsDTO windowsDTO : windowsDTOList) {
 
         }
+    }
+
+    @Override
+    public BaseWindowsIDao getBaseIDao() {
+        return this.baseWindowsIDao;
     }
 }

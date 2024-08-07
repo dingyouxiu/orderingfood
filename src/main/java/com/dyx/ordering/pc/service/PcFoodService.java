@@ -2,7 +2,7 @@ package com.dyx.ordering.pc.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.dyx.ordering.basedao.dto.FoodDTO;
-import com.dyx.ordering.basedao.service.BaseFoodIDao;
+import com.dyx.ordering.basedao.dao.BaseFoodIDao;
 import com.dyx.ordering.common.service.BaseMouldService;
 import com.dyx.ordering.pc.query.PcFoodQuery;
 

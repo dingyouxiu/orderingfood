@@ -1,12 +1,14 @@
 package com.dyx.ordering.wechat.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.dyx.ordering.basedao.dao.BaseOrderFoodIDao;
 import com.dyx.ordering.basedao.dto.OrderFoodDTO;
+import com.dyx.ordering.common.service.BaseMouldService;
 import com.dyx.ordering.wechat.query.WechatOrderFoodQuery;
 
 import java.util.List;
 
-public interface WechatOrderFoodService {
+public interface WechatOrderFoodService extends BaseMouldService<BaseOrderFoodIDao> {
 
     Boolean saveBath(List<OrderFoodDTO> orderFoodDTOList);
 

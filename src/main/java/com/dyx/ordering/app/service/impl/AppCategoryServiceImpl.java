@@ -8,7 +8,7 @@ import com.dyx.ordering.app.service.AppCategoryService;
 import com.dyx.ordering.basedao.dto.CategoryDTO;
 import com.dyx.ordering.basedao.entity.CategoryEntity;
 import com.dyx.ordering.basedao.entity.converter.CategoryEntityConverter;
-import com.dyx.ordering.basedao.service.BaseCategoryIDao;
+import com.dyx.ordering.basedao.dao.BaseCategoryIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,5 +111,10 @@ public class AppCategoryServiceImpl implements AppCategoryService {
         for (CategoryDTO categoryDTO : categoryDTOList) {
 
         }
+    }
+
+    @Override
+    public BaseCategoryIDao getBaseIDao() {
+        return this.baseCategoryIDao;
     }
 }

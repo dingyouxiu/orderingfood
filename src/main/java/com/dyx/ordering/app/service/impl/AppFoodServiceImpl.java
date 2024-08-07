@@ -8,7 +8,7 @@ import com.dyx.ordering.app.service.AppFoodService;
 import com.dyx.ordering.basedao.dto.FoodDTO;
 import com.dyx.ordering.basedao.entity.FoodEntity;
 import com.dyx.ordering.basedao.entity.converter.FoodEntityConverter;
-import com.dyx.ordering.basedao.service.BaseFoodIDao;
+import com.dyx.ordering.basedao.dao.BaseFoodIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,5 +105,10 @@ public class AppFoodServiceImpl implements AppFoodService {
         for (FoodDTO foodDTO : foodDTOList) {
 
         }
+    }
+
+    @Override
+    public BaseFoodIDao getBaseIDao() {
+        return this.baseFoodIDao;
     }
 }

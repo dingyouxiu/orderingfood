@@ -7,7 +7,7 @@ import com.dyx.ordering.basedao.dto.OrderDTO;
 import com.dyx.ordering.basedao.dto.OrderFoodDTO;
 import com.dyx.ordering.basedao.entity.OrderEntity;
 import com.dyx.ordering.basedao.entity.converter.OrderEntityConverter;
-import com.dyx.ordering.basedao.service.BaseOrderIDao;
+import com.dyx.ordering.basedao.dao.BaseOrderIDao;
 import com.dyx.ordering.common.constant.BaseConstants;
 import com.dyx.ordering.common.enums.BaseStatus;
 import com.dyx.ordering.common.enums.OrderStatus;

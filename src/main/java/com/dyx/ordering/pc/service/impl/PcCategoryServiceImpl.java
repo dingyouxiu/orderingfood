@@ -7,7 +7,7 @@ import com.dyx.ordering.basedao.dto.CategoryDTO;
 import com.dyx.ordering.basedao.entity.CategoryEntity;
 import com.dyx.ordering.basedao.entity.FoodEntity;
 import com.dyx.ordering.basedao.entity.converter.CategoryEntityConverter;
-import com.dyx.ordering.basedao.service.BaseCategoryIDao;
+import com.dyx.ordering.basedao.dao.BaseCategoryIDao;
 import com.dyx.ordering.common.enums.BaseStatus;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.exception.ServiceException;

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.basedao.dto.CategoryDTO;
 import com.dyx.ordering.basedao.entity.CategoryEntity;
 import com.dyx.ordering.basedao.entity.converter.CategoryEntityConverter;
-import com.dyx.ordering.basedao.service.BaseCategoryIDao;
+import com.dyx.ordering.basedao.dao.BaseCategoryIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.wechat.query.WechatCategoryQuery;
 import com.dyx.ordering.wechat.service.WechatCategoryService;
@@ -111,5 +111,10 @@ public class WechatCategoryServiceImpl implements WechatCategoryService {
         for (CategoryDTO categoryDTO : categoryDTOList) {
 
         }
+    }
+
+    @Override
+    public BaseCategoryIDao getBaseIDao() {
+        return this.baseCategoryIDao;
     }
 }

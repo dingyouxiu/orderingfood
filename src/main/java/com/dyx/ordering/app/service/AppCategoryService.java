@@ -2,11 +2,13 @@ package com.dyx.ordering.app.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.dyx.ordering.app.query.AppCategoryQuery;
+import com.dyx.ordering.basedao.dao.BaseCategoryIDao;
 import com.dyx.ordering.basedao.dto.CategoryDTO;
+import com.dyx.ordering.common.service.BaseMouldService;
 
 import java.util.List;
 
-public interface AppCategoryService {
+public interface AppCategoryService extends BaseMouldService<BaseCategoryIDao> {
 
     Boolean saveBath(List<CategoryDTO> categoryDTOList);
 

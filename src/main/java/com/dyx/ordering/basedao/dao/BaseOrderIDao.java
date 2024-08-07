@@ -1,4 +1,4 @@
-package com.dyx.ordering.basedao.service;
+package com.dyx.ordering.basedao.dao;
 
 import com.dyx.ordering.basedao.entity.OrderEntity;
 import com.dyx.ordering.common.dao.IDao;

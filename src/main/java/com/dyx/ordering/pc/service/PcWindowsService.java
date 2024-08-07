@@ -2,7 +2,7 @@ package com.dyx.ordering.pc.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.dyx.ordering.basedao.dto.WindowsDTO;
-import com.dyx.ordering.basedao.service.BaseWindowsIDao;
+import com.dyx.ordering.basedao.dao.BaseWindowsIDao;
 import com.dyx.ordering.common.service.BaseMouldService;
 import com.dyx.ordering.pc.query.PcWindowsQuery;
 

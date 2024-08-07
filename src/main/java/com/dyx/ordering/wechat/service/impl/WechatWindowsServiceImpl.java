@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.basedao.dto.WindowsDTO;
 import com.dyx.ordering.basedao.entity.WindowsEntity;
 import com.dyx.ordering.basedao.entity.converter.WindowsEntityConverter;
-import com.dyx.ordering.basedao.service.BaseWindowsIDao;
+import com.dyx.ordering.basedao.dao.BaseWindowsIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.wechat.query.WechatWindowsQuery;
 import com.dyx.ordering.wechat.service.WechatWindowsService;
@@ -103,5 +103,10 @@ public class WechatWindowsServiceImpl implements WechatWindowsService {
         for (WindowsDTO windowsDTO : windowsDTOList) {
 
         }
+    }
+
+    @Override
+    public BaseWindowsIDao getBaseIDao() {
+        return this.baseWindowsIDao;
     }
 }
