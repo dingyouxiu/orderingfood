@@ -1,6 +1,6 @@
 package com.dyx.ordering.pc.controller;
 
-import com.dyx.ordering.baseseriver.dto.CategoryDTO;
+import com.dyx.ordering.basedao.dto.CategoryDTO;
 import com.dyx.ordering.pc.service.PcCategoryService;
 import com.dyx.ordering.result.Result;
 import io.swagger.annotations.Api;

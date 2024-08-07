@@ -1,7 +1,7 @@
 package com.dyx.ordering.pc.controller;
 
-import com.dyx.ordering.baseseriver.dto.UserDTO;
-import com.dyx.ordering.baseseriver.entity.UserEntity;
+import com.dyx.ordering.basedao.dto.UserDTO;
+import com.dyx.ordering.basedao.entity.UserEntity;
 import com.dyx.ordering.common.constant.WechatOpenAPIConstants;
 import com.dyx.ordering.common.utils.HttpUtil;
 import com.dyx.ordering.common.utils.StringReplaceUtil;

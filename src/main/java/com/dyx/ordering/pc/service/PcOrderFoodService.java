@@ -1,7 +1,7 @@
 package com.dyx.ordering.pc.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.dyx.ordering.baseseriver.dto.OrderFoodDTO;
+import com.dyx.ordering.basedao.dto.OrderFoodDTO;
 import com.dyx.ordering.pc.query.PcOrderFoodQuery;
 
 import java.util.List;

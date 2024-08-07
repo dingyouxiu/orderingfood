@@ -1,6 +1,6 @@
 package com.dyx.ordering.wechat.controller;
 
-import com.dyx.ordering.baseseriver.dto.CategoryDTO;
+import com.dyx.ordering.basedao.dto.CategoryDTO;
 import com.dyx.ordering.result.Result;
 import com.dyx.ordering.wechat.service.WechatCategoryService;
 import io.swagger.annotations.Api;

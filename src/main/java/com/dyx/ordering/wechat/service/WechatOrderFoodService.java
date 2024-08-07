@@ -1,7 +1,7 @@
 package com.dyx.ordering.wechat.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.dyx.ordering.baseseriver.dto.OrderFoodDTO;
+import com.dyx.ordering.basedao.dto.OrderFoodDTO;
 import com.dyx.ordering.wechat.query.WechatOrderFoodQuery;
 
 import java.util.List;

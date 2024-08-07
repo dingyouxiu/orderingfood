@@ -2,7 +2,7 @@ package com.dyx.ordering.app.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.dyx.ordering.app.query.AppOrderQuery;
-import com.dyx.ordering.baseseriver.dto.OrderDTO;
+import com.dyx.ordering.basedao.dto.OrderDTO;
 
 import java.util.List;
 

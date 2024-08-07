@@ -1,10 +1,8 @@
 package com.dyx.ordering.app.controller;
 
 import com.dyx.ordering.app.service.AppCategoryService;
-import com.dyx.ordering.baseseriver.dto.CategoryDTO;
-import com.dyx.ordering.baseseriver.dto.FoodDTO;
+import com.dyx.ordering.basedao.dto.CategoryDTO;
 import com.dyx.ordering.result.Result;
-import com.dyx.ordering.wechat.service.WechatCategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

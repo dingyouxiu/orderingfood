@@ -2,7 +2,7 @@ package com.dyx.ordering.app.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.dyx.ordering.app.query.AppFoodQuery;
-import com.dyx.ordering.baseseriver.dto.FoodDTO;
+import com.dyx.ordering.basedao.dto.FoodDTO;
 
 import java.util.List;
 

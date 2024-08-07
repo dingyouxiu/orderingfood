@@ -1,7 +1,7 @@
 package com.dyx.ordering.pc.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.dyx.ordering.baseseriver.dto.OrderDTO;
+import com.dyx.ordering.basedao.dto.OrderDTO;
 import com.dyx.ordering.pc.query.PcOrderQuery;
 import com.dyx.ordering.pc.service.PcOrderService;
 import com.dyx.ordering.result.Result;

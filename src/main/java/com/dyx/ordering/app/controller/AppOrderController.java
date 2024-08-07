@@ -3,7 +3,7 @@ package com.dyx.ordering.app.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.dyx.ordering.app.query.AppOrderQuery;
 import com.dyx.ordering.app.service.AppOrderService;
-import com.dyx.ordering.baseseriver.dto.OrderDTO;
+import com.dyx.ordering.basedao.dto.OrderDTO;
 import com.dyx.ordering.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
