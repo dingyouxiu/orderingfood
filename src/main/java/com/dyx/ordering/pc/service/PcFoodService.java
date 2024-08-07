@@ -15,4 +15,6 @@ public interface PcFoodService {
     FoodDTO edit(FoodDTO foodDTO);
 
     IPage<FoodDTO> queryPage(PcFoodQuery foodQuery);
+
+    List<FoodDTO> queryList(PcFoodQuery foodQuery);
 }

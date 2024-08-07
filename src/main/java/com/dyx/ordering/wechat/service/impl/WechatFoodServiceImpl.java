@@ -6,11 +6,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.FoodDTO;
 import com.dyx.ordering.baseseriver.entity.FoodEntity;
 import com.dyx.ordering.baseseriver.entity.converter.FoodEntityConverter;
-import com.dyx.ordering.baseseriver.service.impl.BaseFoodServiceImpl;
+import com.dyx.ordering.baseseriver.service.BaseFoodService;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.wechat.query.WechatFoodQuery;
 import com.dyx.ordering.wechat.service.WechatFoodService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class WechatFoodServiceImpl extends BaseFoodServiceImpl implements WechatFoodService{
+public class WechatFoodServiceImpl implements WechatFoodService{
+
+    @Autowired
+    private BaseFoodService baseFoodService;
 
     /**
      * 新增
@@ -34,7 +38,7 @@ public class WechatFoodServiceImpl extends BaseFoodServiceImpl implements Wechat
 
         List<FoodEntity> foodEntityList = FoodEntityConverter.INSTANCE.toEntityList(foodDTOList);
 
-        return this.saveBatch(foodEntityList);
+        return baseFoodService.saveBatch(foodEntityList);
     }
 
     /**
@@ -49,7 +53,7 @@ public class WechatFoodServiceImpl extends BaseFoodServiceImpl implements Wechat
             return Boolean.FALSE;
         }
 
-        return this.removeByIds(foodIdList);
+        return baseFoodService.removeByIds(foodIdList);
     }
 
     /**
@@ -64,7 +68,7 @@ public class WechatFoodServiceImpl extends BaseFoodServiceImpl implements Wechat
             return foodDTO;
         }
 
-        this.updateById(foodDTO);
+        baseFoodService.updateById(foodDTO);
 
         return foodDTO;
     }
@@ -79,7 +83,7 @@ public class WechatFoodServiceImpl extends BaseFoodServiceImpl implements Wechat
     public IPage<FoodDTO> queryPage(WechatFoodQuery wechatFoodQuery) {
 
         IPage<FoodEntity> foodEntityIPage =
-                this.page(PageUtil.buildPage(wechatFoodQuery), buildQueryWrapper(wechatFoodQuery));
+                baseFoodService.page(PageUtil.buildPage(wechatFoodQuery), buildQueryWrapper(wechatFoodQuery));
         IPage<FoodDTO> foodDTOIPage = FoodEntityConverter.INSTANCE.toIPageDTO(foodEntityIPage);
 
         expandAttributes(foodDTOIPage.getRecords());

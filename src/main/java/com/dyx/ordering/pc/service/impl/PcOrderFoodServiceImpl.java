@@ -6,13 +6,14 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.OrderFoodDTO;
 import com.dyx.ordering.baseseriver.entity.OrderFoodEntity;
 import com.dyx.ordering.baseseriver.entity.converter.OrderFoodEntityConverter;
-import com.dyx.ordering.baseseriver.service.impl.BaseOrderFoodServiceImpl;
+import com.dyx.ordering.baseseriver.service.BaseOrderFoodService;
 import com.dyx.ordering.common.enums.BaseStatus;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.exception.ServiceException;
 import com.dyx.ordering.pc.query.PcOrderFoodQuery;
 import com.dyx.ordering.pc.service.PcOrderFoodService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class PcOrderFoodServiceImpl extends BaseOrderFoodServiceImpl implements PcOrderFoodService {
+public class PcOrderFoodServiceImpl implements PcOrderFoodService {
+
+    @Autowired
+    private BaseOrderFoodService baseOrderFoodService;
 
     /**
      * 新增
@@ -36,7 +40,7 @@ public class PcOrderFoodServiceImpl extends BaseOrderFoodServiceImpl implements 
 
         List<OrderFoodEntity> orderFoodEntityList = OrderFoodEntityConverter.INSTANCE.toEntityList(orderFoodDTOList);
 
-        return this.saveBatch(orderFoodEntityList);
+        return baseOrderFoodService.saveBatch(orderFoodEntityList);
     }
 
     /**
@@ -51,7 +55,7 @@ public class PcOrderFoodServiceImpl extends BaseOrderFoodServiceImpl implements 
             return Boolean.FALSE;
         }
 
-        return this.removeByIds(orderFoodIdList);
+        return baseOrderFoodService.removeByIds(orderFoodIdList);
     }
 
     /**
@@ -66,7 +70,7 @@ public class PcOrderFoodServiceImpl extends BaseOrderFoodServiceImpl implements 
             return orderFoodDTO;
         }
 
-        boolean updateResult = this.updateById(orderFoodDTO);
+        boolean updateResult = baseOrderFoodService.updateById(orderFoodDTO);
         if (!updateResult) {
             throw new ServiceException(BaseStatus.ORDER_EDIT_ERROR);
         }
@@ -87,7 +91,7 @@ public class PcOrderFoodServiceImpl extends BaseOrderFoodServiceImpl implements 
 
         List<OrderFoodEntity> orderFoodEntityList = OrderFoodEntityConverter.INSTANCE.toEntityList(orderFoodDTOList);
 
-        return this.updateBatchById(orderFoodEntityList);
+        return baseOrderFoodService.updateBatchById(orderFoodEntityList);
     }
 
     /**
@@ -99,7 +103,7 @@ public class PcOrderFoodServiceImpl extends BaseOrderFoodServiceImpl implements 
     public IPage<OrderFoodDTO> queryPage(PcOrderFoodQuery wechatOrderFoodQuery) {
 
         IPage<OrderFoodEntity> orderFoodEntityIPage =
-                this.page(PageUtil.buildPage(wechatOrderFoodQuery), buildQueryWrapper(wechatOrderFoodQuery));
+                baseOrderFoodService.page(PageUtil.buildPage(wechatOrderFoodQuery), buildQueryWrapper(wechatOrderFoodQuery));
         IPage<OrderFoodDTO> orderFoodDTOIPage = OrderFoodEntityConverter.INSTANCE.toIPageDTO(orderFoodEntityIPage);
 
         expandAttributes(orderFoodDTOIPage.getRecords());
@@ -109,7 +113,7 @@ public class PcOrderFoodServiceImpl extends BaseOrderFoodServiceImpl implements 
 
     @Override
     public List<OrderFoodDTO> queryList(PcOrderFoodQuery orderFoodQuery) {
-        List<OrderFoodEntity> orderFoodEntityList = this.list(buildQueryWrapper(orderFoodQuery));
+        List<OrderFoodEntity> orderFoodEntityList = baseOrderFoodService.list(buildQueryWrapper(orderFoodQuery));
 
         return OrderFoodEntityConverter.INSTANCE.toDTOList(orderFoodEntityList);
     }

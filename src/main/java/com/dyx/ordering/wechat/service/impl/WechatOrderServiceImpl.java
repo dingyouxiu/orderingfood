@@ -7,7 +7,7 @@ import com.dyx.ordering.baseseriver.dto.OrderDTO;
 import com.dyx.ordering.baseseriver.dto.OrderFoodDTO;
 import com.dyx.ordering.baseseriver.entity.OrderEntity;
 import com.dyx.ordering.baseseriver.entity.converter.OrderEntityConverter;
-import com.dyx.ordering.baseseriver.service.impl.BaseOrderServiceImpl;
+import com.dyx.ordering.baseseriver.service.BaseOrderService;
 import com.dyx.ordering.common.constant.BaseConstants;
 import com.dyx.ordering.common.enums.BaseStatus;
 import com.dyx.ordering.common.enums.OrderStatus;
@@ -30,13 +30,15 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Service
-public class WechatOrderServiceImpl extends BaseOrderServiceImpl implements WechatOrderService {
+public class WechatOrderServiceImpl implements WechatOrderService {
     private final ReentrantLock reentrantLock = new ReentrantLock();
+
+    @Autowired
+    private BaseOrderService baseOrderService;
 
     @Autowired
     private WechatOrderFoodService wechatOrderFoodService;
@@ -61,7 +63,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl implements Wech
 
         List<OrderEntity> orderEntityList = OrderEntityConverter.INSTANCE.toEntityList(orderDTOList);
 
-        return this.saveBatch(orderEntityList);
+        return baseOrderService.saveBatch(orderEntityList);
     }
 
     /**
@@ -76,7 +78,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl implements Wech
             return Boolean.FALSE;
         }
 
-        return this.removeByIds(orderIdList);
+        return baseOrderService.removeByIds(orderIdList);
     }
 
     /**
@@ -91,7 +93,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl implements Wech
             return Boolean.FALSE;
         }
 
-        return this.updateById(orderDTO);
+        return baseOrderService.updateById(orderDTO);
     }
 
     /**
@@ -103,7 +105,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl implements Wech
     public IPage<OrderDTO> queryPage(WechatOrderQuery orderQuery) {
 
         IPage<OrderEntity> orderEntityIPage =
-                this.page(PageUtil.buildPage(orderQuery), buildQueryWrapper(orderQuery));
+                baseOrderService.page(PageUtil.buildPage(orderQuery), buildQueryWrapper(orderQuery));
         IPage<OrderDTO> orderDTOIPage = OrderEntityConverter.INSTANCE.toIPageDTO(orderEntityIPage);
         expandAttributes(orderDTOIPage.getRecords());
 
@@ -153,7 +155,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl implements Wech
         // 保存订单
         OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
         orderEntity.setTotalPrice(totalPrice);
-        boolean saveOrder = this.save(orderEntity);
+        boolean saveOrder = baseOrderService.save(orderEntity);
 
         if (!(saveOrder && saveOrderFoodList)) {
             throw new ServiceException(BaseStatus.ORDER_SAVE_ERROR);
@@ -204,7 +206,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl implements Wech
         // 更新订单
         OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
         orderEntity.setTotalPrice(totalPrice);
-        boolean updateOrderResult = this.updateById(orderEntity);
+        boolean updateOrderResult = baseOrderService.updateById(orderEntity);
 
         if (!(updateOrderResult && saveOrderFoodResult && updateOrderFoodResult)) {
             throw new ServiceException(BaseStatus.ORDER_SAVE_ERROR);
@@ -240,7 +242,7 @@ public class WechatOrderServiceImpl extends BaseOrderServiceImpl implements Wech
                     Long serialNumberMax = wechatOrderMapper.selectSerialNumberMax();
                     orderEntity.setSerialNumber(++serialNumberMax);
 
-                    boolean updateOrderResult = this.updateById(orderDTO);
+                    boolean updateOrderResult = baseOrderService.updateById(orderDTO);
                     if (!updateOrderResult) {
                         throw new ServiceException(BaseStatus.ORDER_PURCHASE_ERROR);
                     }

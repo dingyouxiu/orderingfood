@@ -6,11 +6,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.WindowsDTO;
 import com.dyx.ordering.baseseriver.entity.WindowsEntity;
 import com.dyx.ordering.baseseriver.entity.converter.WindowsEntityConverter;
-import com.dyx.ordering.baseseriver.service.impl.BaseWindowsServiceImpl;
+import com.dyx.ordering.baseseriver.service.BaseWindowsService;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.pc.query.PcWindowsQuery;
 import com.dyx.ordering.pc.service.PcWindowsService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class PcWindowsServiceImpl extends BaseWindowsServiceImpl implements PcWindowsService {
+public class PcWindowsServiceImpl implements PcWindowsService {
+
+    @Autowired
+    private BaseWindowsService baseWindowsService;
 
     /**
      * 新增
@@ -34,7 +38,7 @@ public class PcWindowsServiceImpl extends BaseWindowsServiceImpl implements PcWi
 
         List<WindowsEntity> windowsEntityList = WindowsEntityConverter.INSTANCE.toEntityList(windowsDTOList);
 
-        return this.saveBatch(windowsEntityList);
+        return baseWindowsService.saveBatch(windowsEntityList);
     }
 
     /**
@@ -49,7 +53,7 @@ public class PcWindowsServiceImpl extends BaseWindowsServiceImpl implements PcWi
             return Boolean.FALSE;
         }
 
-        return this.removeByIds(windowsIdList);
+        return baseWindowsService.removeByIds(windowsIdList);
     }
 
     /**
@@ -64,7 +68,7 @@ public class PcWindowsServiceImpl extends BaseWindowsServiceImpl implements PcWi
             return windowsDTO;
         }
 
-        this.updateById(windowsDTO);
+        baseWindowsService.updateById(windowsDTO);
 
         return windowsDTO;
     }
@@ -78,7 +82,7 @@ public class PcWindowsServiceImpl extends BaseWindowsServiceImpl implements PcWi
     public IPage<WindowsDTO> queryPage(PcWindowsQuery wechatWindowsQuery) {
 
         IPage<WindowsEntity> windowsEntityIPage =
-                this.page(PageUtil.buildPage(wechatWindowsQuery), buildQueryWrapper(wechatWindowsQuery));
+                baseWindowsService.page(PageUtil.buildPage(wechatWindowsQuery), buildQueryWrapper(wechatWindowsQuery));
         IPage<WindowsDTO> windowsDTOIPage = WindowsEntityConverter.INSTANCE.toIPageDTO(windowsEntityIPage);
 
         expandAttributes(windowsDTOIPage.getRecords());

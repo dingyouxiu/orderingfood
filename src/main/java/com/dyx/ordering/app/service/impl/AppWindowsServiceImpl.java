@@ -8,9 +8,10 @@ import com.dyx.ordering.app.service.AppWindowsService;
 import com.dyx.ordering.baseseriver.dto.WindowsDTO;
 import com.dyx.ordering.baseseriver.entity.WindowsEntity;
 import com.dyx.ordering.baseseriver.entity.converter.WindowsEntityConverter;
-import com.dyx.ordering.baseseriver.service.impl.BaseWindowsServiceImpl;
+import com.dyx.ordering.baseseriver.service.BaseWindowsService;
 import com.dyx.ordering.common.utils.PageUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class AppWindowsServiceImpl extends BaseWindowsServiceImpl implements AppWindowsService {
+public class AppWindowsServiceImpl implements AppWindowsService {
+
+    @Autowired
+    private BaseWindowsService baseWindowsService;
 
     /**
      * 新增
@@ -34,7 +38,7 @@ public class AppWindowsServiceImpl extends BaseWindowsServiceImpl implements App
 
         List<WindowsEntity> windowsEntityList = WindowsEntityConverter.INSTANCE.toEntityList(windowsDTOList);
 
-        return this.saveBatch(windowsEntityList);
+        return baseWindowsService.saveBatch(windowsEntityList);
     }
 
     /**
@@ -49,7 +53,7 @@ public class AppWindowsServiceImpl extends BaseWindowsServiceImpl implements App
             return Boolean.FALSE;
         }
 
-        return this.removeByIds(windowsIdList);
+        return baseWindowsService.removeByIds(windowsIdList);
     }
 
     /**
@@ -64,7 +68,7 @@ public class AppWindowsServiceImpl extends BaseWindowsServiceImpl implements App
             return windowsDTO;
         }
 
-        this.updateById(windowsDTO);
+        baseWindowsService.updateById(windowsDTO);
 
         return windowsDTO;
     }
@@ -78,7 +82,7 @@ public class AppWindowsServiceImpl extends BaseWindowsServiceImpl implements App
     public IPage<WindowsDTO> queryPage(AppWindowsQuery wechatWindowsQuery) {
 
         IPage<WindowsEntity> windowsEntityIPage =
-                this.page(PageUtil.buildPage(wechatWindowsQuery), buildQueryWrapper(wechatWindowsQuery));
+                baseWindowsService.page(PageUtil.buildPage(wechatWindowsQuery), buildQueryWrapper(wechatWindowsQuery));
         IPage<WindowsDTO> windowsDTOIPage = WindowsEntityConverter.INSTANCE.toIPageDTO(windowsEntityIPage);
 
         expandAttributes(windowsDTOIPage.getRecords());

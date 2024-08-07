@@ -8,9 +8,10 @@ import com.dyx.ordering.app.service.AppCategoryService;
 import com.dyx.ordering.baseseriver.dto.CategoryDTO;
 import com.dyx.ordering.baseseriver.entity.CategoryEntity;
 import com.dyx.ordering.baseseriver.entity.converter.CategoryEntityConverter;
-import com.dyx.ordering.baseseriver.service.impl.BaseCategoryServiceImpl;
+import com.dyx.ordering.baseseriver.service.BaseCategoryService;
 import com.dyx.ordering.common.utils.PageUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class AppCategoryServiceImpl extends BaseCategoryServiceImpl implements AppCategoryService {
+public class AppCategoryServiceImpl implements AppCategoryService {
+
+    @Autowired
+    private BaseCategoryService baseCategoryService;
 
     /**
      * 新增
@@ -34,7 +38,7 @@ public class AppCategoryServiceImpl extends BaseCategoryServiceImpl implements A
 
         List<CategoryEntity> categoryEntityList = CategoryEntityConverter.INSTANCE.toEntityList(categoryDTOList);
 
-        return this.saveBatch(categoryEntityList);
+        return baseCategoryService.saveBatch(categoryEntityList);
     }
 
     /**
@@ -49,7 +53,7 @@ public class AppCategoryServiceImpl extends BaseCategoryServiceImpl implements A
             return Boolean.FALSE;
         }
 
-        return this.removeByIds(categoryIdList);
+        return baseCategoryService.removeByIds(categoryIdList);
     }
 
     /**
@@ -64,7 +68,7 @@ public class AppCategoryServiceImpl extends BaseCategoryServiceImpl implements A
             return categoryDTO;
         }
 
-        this.updateById(categoryDTO);
+        baseCategoryService.updateById(categoryDTO);
 
         return categoryDTO;
     }
@@ -78,7 +82,7 @@ public class AppCategoryServiceImpl extends BaseCategoryServiceImpl implements A
     public IPage<CategoryDTO> queryPage(AppCategoryQuery wechatCategoryQuery) {
 
         IPage<CategoryEntity> categoryEntityIPage =
-                this.page(PageUtil.buildPage(wechatCategoryQuery), buildQueryWrapper(wechatCategoryQuery));
+                baseCategoryService.page(PageUtil.buildPage(wechatCategoryQuery), buildQueryWrapper(wechatCategoryQuery));
         IPage<CategoryDTO> categoryDTOIPage = CategoryEntityConverter.INSTANCE.toIPageDTO(categoryEntityIPage);
 
         expandAttributes(categoryDTOIPage.getRecords());
@@ -89,7 +93,7 @@ public class AppCategoryServiceImpl extends BaseCategoryServiceImpl implements A
     @Override
     public List<CategoryDTO> queryList() {
 
-        List<CategoryEntity> categoryEntityList = this.list();
+        List<CategoryEntity> categoryEntityList = baseCategoryService.list();
 
         return CategoryEntityConverter.INSTANCE.toDTOList(categoryEntityList);
     }

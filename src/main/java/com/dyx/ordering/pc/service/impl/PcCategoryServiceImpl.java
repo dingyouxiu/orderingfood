@@ -6,19 +6,29 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.CategoryDTO;
 import com.dyx.ordering.baseseriver.entity.CategoryEntity;
 import com.dyx.ordering.baseseriver.entity.converter.CategoryEntityConverter;
-import com.dyx.ordering.baseseriver.service.impl.BaseCategoryServiceImpl;
+import com.dyx.ordering.baseseriver.service.BaseCategoryService;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.pc.query.PcCategoryQuery;
 import com.dyx.ordering.pc.service.PcCategoryService;
+import com.dyx.ordering.pc.service.PcFoodService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
-public class PcCategoryServiceImpl extends BaseCategoryServiceImpl implements PcCategoryService {
+public class PcCategoryServiceImpl implements PcCategoryService {
+
+    @Autowired
+    private BaseCategoryService baseCategoryService;
+    
+    @Autowired
+    private PcFoodService pcFoodService;
 
     /**
      * 新增
@@ -34,7 +44,7 @@ public class PcCategoryServiceImpl extends BaseCategoryServiceImpl implements Pc
 
         List<CategoryEntity> categoryEntityList = CategoryEntityConverter.INSTANCE.toEntityList(categoryDTOList);
 
-        return this.saveBatch(categoryEntityList);
+        return baseCategoryService.saveBatch(categoryEntityList);
     }
 
     /**
@@ -49,7 +59,16 @@ public class PcCategoryServiceImpl extends BaseCategoryServiceImpl implements Pc
             return Boolean.FALSE;
         }
 
-        return this.removeByIds(categoryIdList);
+        // 判断菜单下是否有商品
+        List<CategoryEntity> categoryEntityList = baseCategoryService.listByIds(categoryIdList);
+        Map<Long, String> categoryIdAndNameMap =
+                categoryEntityList
+                        .stream()
+                        .collect(Collectors.toMap(CategoryEntity::getId, CategoryEntity::getCategoryName));
+//        pcFoodService.
+
+
+        return baseCategoryService.removeByIds(categoryIdList);
     }
 
     /**
@@ -64,7 +83,7 @@ public class PcCategoryServiceImpl extends BaseCategoryServiceImpl implements Pc
             return categoryDTO;
         }
 
-        this.updateById(categoryDTO);
+        baseCategoryService.updateById(categoryDTO);
 
         return categoryDTO;
     }
@@ -78,7 +97,7 @@ public class PcCategoryServiceImpl extends BaseCategoryServiceImpl implements Pc
     public IPage<CategoryDTO> queryPage(PcCategoryQuery wechatCategoryQuery) {
 
         IPage<CategoryEntity> categoryEntityIPage =
-                this.page(PageUtil.buildPage(wechatCategoryQuery), buildQueryWrapper(wechatCategoryQuery));
+                baseCategoryService.page(PageUtil.buildPage(wechatCategoryQuery), buildQueryWrapper(wechatCategoryQuery));
         IPage<CategoryDTO> categoryDTOIPage = CategoryEntityConverter.INSTANCE.toIPageDTO(categoryEntityIPage);
 
         expandAttributes(categoryDTOIPage.getRecords());
@@ -89,7 +108,7 @@ public class PcCategoryServiceImpl extends BaseCategoryServiceImpl implements Pc
     @Override
     public List<CategoryDTO> queryList() {
 
-        List<CategoryEntity> categoryEntityList = this.list();
+        List<CategoryEntity> categoryEntityList = baseCategoryService.list();
 
         return CategoryEntityConverter.INSTANCE.toDTOList(categoryEntityList);
     }

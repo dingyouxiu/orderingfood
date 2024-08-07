@@ -6,20 +6,23 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.CategoryDTO;
 import com.dyx.ordering.baseseriver.entity.CategoryEntity;
 import com.dyx.ordering.baseseriver.entity.converter.CategoryEntityConverter;
-import com.dyx.ordering.baseseriver.service.impl.BaseCategoryServiceImpl;
+import com.dyx.ordering.baseseriver.service.BaseCategoryService;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.wechat.query.WechatCategoryQuery;
 import com.dyx.ordering.wechat.service.WechatCategoryService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 @Service
-public class WechatCategoryServiceImpl extends BaseCategoryServiceImpl implements WechatCategoryService {
+public class WechatCategoryServiceImpl implements WechatCategoryService {
+
+    @Autowired
+    private BaseCategoryService baseCategoryService;
 
     /**
      * 新增
@@ -35,7 +38,7 @@ public class WechatCategoryServiceImpl extends BaseCategoryServiceImpl implement
 
         List<CategoryEntity> categoryEntityList = CategoryEntityConverter.INSTANCE.toEntityList(categoryDTOList);
 
-        return this.saveBatch(categoryEntityList);
+        return baseCategoryService.saveBatch(categoryEntityList);
     }
 
     /**
@@ -50,7 +53,7 @@ public class WechatCategoryServiceImpl extends BaseCategoryServiceImpl implement
             return Boolean.FALSE;
         }
 
-        return this.removeByIds(categoryIdList);
+        return baseCategoryService.removeByIds(categoryIdList);
     }
 
     /**
@@ -65,7 +68,7 @@ public class WechatCategoryServiceImpl extends BaseCategoryServiceImpl implement
             return categoryDTO;
         }
 
-        this.updateById(categoryDTO);
+        baseCategoryService.updateById(categoryDTO);
 
         return categoryDTO;
     }
@@ -79,7 +82,7 @@ public class WechatCategoryServiceImpl extends BaseCategoryServiceImpl implement
     public IPage<CategoryDTO> queryPage(WechatCategoryQuery wechatCategoryQuery) {
 
         IPage<CategoryEntity> categoryEntityIPage =
-                this.page(PageUtil.buildPage(wechatCategoryQuery), buildQueryWrapper(wechatCategoryQuery));
+                baseCategoryService.page(PageUtil.buildPage(wechatCategoryQuery), buildQueryWrapper(wechatCategoryQuery));
         IPage<CategoryDTO> categoryDTOIPage = CategoryEntityConverter.INSTANCE.toIPageDTO(categoryEntityIPage);
 
         expandAttributes(categoryDTOIPage.getRecords());
@@ -90,7 +93,7 @@ public class WechatCategoryServiceImpl extends BaseCategoryServiceImpl implement
     @Override
     public List<CategoryDTO> queryList() {
 
-        List<CategoryEntity> categoryEntityList = this.list();
+        List<CategoryEntity> categoryEntityList = baseCategoryService.list();
 
         return CategoryEntityConverter.INSTANCE.toDTOList(categoryEntityList);
     }

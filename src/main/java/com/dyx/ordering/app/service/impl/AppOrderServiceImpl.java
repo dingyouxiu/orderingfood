@@ -12,7 +12,7 @@ import com.dyx.ordering.baseseriver.dto.OrderDTO;
 import com.dyx.ordering.baseseriver.dto.OrderFoodDTO;
 import com.dyx.ordering.baseseriver.entity.OrderEntity;
 import com.dyx.ordering.baseseriver.entity.converter.OrderEntityConverter;
-import com.dyx.ordering.baseseriver.service.impl.BaseOrderServiceImpl;
+import com.dyx.ordering.baseseriver.service.BaseOrderService;
 import com.dyx.ordering.common.constant.BaseConstants;
 import com.dyx.ordering.common.enums.BaseStatus;
 import com.dyx.ordering.common.enums.OrderStatus;
@@ -34,8 +34,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Service
-public class AppOrderServiceImpl extends BaseOrderServiceImpl implements AppOrderService {
+public class AppOrderServiceImpl implements AppOrderService {
     private final ReentrantLock reentrantLock = new ReentrantLock();
+
+    @Autowired
+    private BaseOrderService baseOrderService;
 
     @Autowired
     private AppOrderFoodService wechatOrderFoodService;
@@ -60,7 +63,7 @@ public class AppOrderServiceImpl extends BaseOrderServiceImpl implements AppOrde
 
         List<OrderEntity> orderEntityList = OrderEntityConverter.INSTANCE.toEntityList(orderDTOList);
 
-        return this.saveBatch(orderEntityList);
+        return baseOrderService.saveBatch(orderEntityList);
     }
 
     /**
@@ -75,7 +78,7 @@ public class AppOrderServiceImpl extends BaseOrderServiceImpl implements AppOrde
             return Boolean.FALSE;
         }
 
-        return this.removeByIds(orderIdList);
+        return baseOrderService.removeByIds(orderIdList);
     }
 
     /**
@@ -90,7 +93,7 @@ public class AppOrderServiceImpl extends BaseOrderServiceImpl implements AppOrde
             return Boolean.FALSE;
         }
 
-        return this.updateById(orderDTO);
+        return baseOrderService.updateById(orderDTO);
     }
 
     /**
@@ -102,7 +105,7 @@ public class AppOrderServiceImpl extends BaseOrderServiceImpl implements AppOrde
     public IPage<OrderDTO> queryPage(AppOrderQuery orderQuery) {
 
         IPage<OrderEntity> orderEntityIPage =
-                this.page(PageUtil.buildPage(orderQuery), buildQueryWrapper(orderQuery));
+                baseOrderService.page(PageUtil.buildPage(orderQuery), buildQueryWrapper(orderQuery));
         IPage<OrderDTO> orderDTOIPage = OrderEntityConverter.INSTANCE.toIPageDTO(orderEntityIPage);
         expandAttributes(orderDTOIPage.getRecords());
 
@@ -152,7 +155,7 @@ public class AppOrderServiceImpl extends BaseOrderServiceImpl implements AppOrde
         // 保存订单
         OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
         orderEntity.setTotalPrice(totalPrice);
-        boolean saveOrder = this.save(orderEntity);
+        boolean saveOrder = baseOrderService.save(orderEntity);
 
         if (!(saveOrder && saveOrderFoodList)) {
             throw new ServiceException(BaseStatus.ORDER_SAVE_ERROR);
@@ -203,7 +206,7 @@ public class AppOrderServiceImpl extends BaseOrderServiceImpl implements AppOrde
         // 更新订单
         OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
         orderEntity.setTotalPrice(totalPrice);
-        boolean updateOrderResult = this.updateById(orderEntity);
+        boolean updateOrderResult = baseOrderService.updateById(orderEntity);
 
         if (!(updateOrderResult && saveOrderFoodResult && updateOrderFoodResult)) {
             throw new ServiceException(BaseStatus.ORDER_SAVE_ERROR);
@@ -239,7 +242,7 @@ public class AppOrderServiceImpl extends BaseOrderServiceImpl implements AppOrde
                     Long serialNumberMax = wechatOrderMapper.selectSerialNumberMax();
                     orderEntity.setSerialNumber(++serialNumberMax);
 
-                    boolean updateOrderResult = this.updateById(orderDTO);
+                    boolean updateOrderResult = baseOrderService.updateById(orderDTO);
                     if (!updateOrderResult) {
                         throw new ServiceException(BaseStatus.ORDER_PURCHASE_ERROR);
                     }
