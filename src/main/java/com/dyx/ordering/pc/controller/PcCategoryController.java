@@ -19,14 +19,20 @@ public class PcCategoryController {
     private PcCategoryService appCategoryService;
 
     @PostMapping("/save-bath")
-    @ApiOperation(value = "新增", notes = "新增")
+    @ApiOperation(value = "新增-批量", notes = "新增-批量")
     public Result<Boolean> saveBath(@RequestBody List<CategoryDTO> categoryDTOList) {
         return Result.success(appCategoryService.saveBath(categoryDTOList));
     }
 
+    @PostMapping("/save")
+    @ApiOperation(value = "新增", notes = "新增")
+    public Result<Boolean> save(@RequestBody CategoryDTO categoryDTO) {
+        return Result.success(appCategoryService.save(categoryDTO));
+    }
+
     @PostMapping("/delete-bath")
     @ApiOperation(value = "删除", notes = "删除")
-    public Result<Boolean> deleteBath(@RequestBody List<Long> foodIdList) {
+    public Result<Boolean> deleteBath(@RequestBody List<Integer> foodIdList) {
         return Result.success(appCategoryService.deleteBath(foodIdList));
     }
 

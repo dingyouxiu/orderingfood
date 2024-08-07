@@ -104,4 +104,9 @@ public class PcWindowsServiceImpl implements PcWindowsService {
 
         }
     }
+
+    @Override
+    public BaseWindowsIDao getBaseIDao() {
+        return this.baseWindowsIDao;
+    }
 }

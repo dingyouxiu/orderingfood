@@ -281,4 +281,9 @@ public class PcOrderServiceImpl implements PcOrderService {
 
         }
     }
+
+    @Override
+    public BaseOrderIDao getBaseIDao() {
+        return this.baseOrderIDao;
+    }
 }

@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.basedao.dto.CategoryDTO;
 import com.dyx.ordering.basedao.entity.CategoryEntity;
+import com.dyx.ordering.basedao.entity.FoodEntity;
 import com.dyx.ordering.basedao.entity.converter.CategoryEntityConverter;
 import com.dyx.ordering.basedao.service.BaseCategoryIDao;
+import com.dyx.ordering.common.enums.BaseStatus;
 import com.dyx.ordering.common.utils.PageUtil;
+import com.dyx.ordering.exception.ServiceException;
 import com.dyx.ordering.pc.query.PcCategoryQuery;
 import com.dyx.ordering.pc.service.PcCategoryService;
 import com.dyx.ordering.pc.service.PcFoodService;
@@ -47,6 +50,15 @@ public class PcCategoryServiceImpl implements PcCategoryService {
         return baseCategoryIDao.saveBatch(categoryEntityList);
     }
 
+    @Override
+    public Boolean save(CategoryDTO categoryDTO) {
+        if (Objects.isNull(categoryDTO)) {
+            return Boolean.FALSE;
+        }
+
+        return baseCategoryIDao.save(categoryDTO);
+    }
+
     /**
      * 删除-批量
      * @param categoryIdList
@@ -54,19 +66,36 @@ public class PcCategoryServiceImpl implements PcCategoryService {
      */
     @Override
     @Transactional
-    public Boolean deleteBath(List<Long> categoryIdList) {
+    public Boolean deleteBath(List<Integer> categoryIdList) {
         if (CollectionUtils.isEmpty(categoryIdList)) {
             return Boolean.FALSE;
         }
 
+        StringBuilder errorMsg = new StringBuilder();
+
         // 判断菜单下是否有商品
         List<CategoryEntity> categoryEntityList = baseCategoryIDao.listByIds(categoryIdList);
-        Map<Long, String> categoryIdAndNameMap =
+        Map<Integer, String> categoryIdAndNameMap =
                 categoryEntityList
                         .stream()
-                        .collect(Collectors.toMap(CategoryEntity::getId, CategoryEntity::getCategoryName));
-//        pcFoodService.
+                        .collect(Collectors.toMap(CategoryEntity::getCategory, CategoryEntity::getCategoryName));
+        List<FoodEntity> foodEntityList =
+                pcFoodService.getBaseFoodIDao()
+                        .list(Wrappers.<FoodEntity>lambdaQuery().in(FoodEntity::getCategory, categoryIdList));
+        Map<Integer, List<FoodEntity>> cateaoryIdAndFoodListMap =
+                foodEntityList.stream().collect(Collectors.groupingBy(FoodEntity::getCategory));
+        for (Integer categoryId : categoryIdList) {
+            if (CollectionUtils.isNotEmpty(cateaoryIdAndFoodListMap.get(categoryId))) {
+                errorMsg
+                        .append("菜单{ ")
+                        .append(categoryIdAndNameMap.get(categoryId))
+                        .append(" },下存在商品不允许删除;");
+            }
+        }
 
+        if (errorMsg.length() != 0) {
+            throw new ServiceException(BaseStatus.BASE_ERROR,errorMsg);
+        }
 
         return baseCategoryIDao.removeByIds(categoryIdList);
     }
@@ -126,5 +155,10 @@ public class PcCategoryServiceImpl implements PcCategoryService {
         for (CategoryDTO categoryDTO : categoryDTOList) {
 
         }
+    }
+
+    @Override
+    public BaseCategoryIDao getBaseIDao() {
+        return this.baseCategoryIDao;
     }
 }

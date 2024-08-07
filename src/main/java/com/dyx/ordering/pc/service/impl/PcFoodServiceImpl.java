@@ -22,7 +22,11 @@ import java.util.Objects;
 public class PcFoodServiceImpl implements PcFoodService {
 
     @Autowired
-    private BaseFoodIDao baseFoodIDao;
+    protected BaseFoodIDao baseFoodIDao;
+
+    public BaseFoodIDao getBaseFoodIDao() {
+        return this.baseFoodIDao;
+    }
 
     /**
      * 新增
@@ -121,5 +125,10 @@ public class PcFoodServiceImpl implements PcFoodService {
         for (FoodDTO foodDTO : foodDTOList) {
 
         }
+    }
+
+    @Override
+    public BaseFoodIDao getBaseIDao() {
+        return this.baseFoodIDao;
     }
 }

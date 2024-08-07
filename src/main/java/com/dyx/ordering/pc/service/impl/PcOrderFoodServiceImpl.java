@@ -134,4 +134,9 @@ public class PcOrderFoodServiceImpl implements PcOrderFoodService {
 
         }
     }
+
+    @Override
+    public BaseOrderFoodIDao getBaseIDao() {
+        return this.baseOrderFoodIDao;
+    }
 }

@@ -2,11 +2,13 @@ package com.dyx.ordering.pc.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.dyx.ordering.basedao.dto.FoodDTO;
+import com.dyx.ordering.basedao.service.BaseFoodIDao;
+import com.dyx.ordering.common.service.BaseMouldService;
 import com.dyx.ordering.pc.query.PcFoodQuery;
 
 import java.util.List;
 
-public interface PcFoodService {
+public interface PcFoodService extends BaseMouldService<BaseFoodIDao> {
 
     Boolean saveBath(List<FoodDTO> foodDTOList);
 
@@ -17,4 +19,6 @@ public interface PcFoodService {
     IPage<FoodDTO> queryPage(PcFoodQuery foodQuery);
 
     List<FoodDTO> queryList(PcFoodQuery foodQuery);
+
+    BaseFoodIDao getBaseFoodIDao();
 }

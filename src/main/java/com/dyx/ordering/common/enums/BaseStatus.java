@@ -31,6 +31,11 @@ public enum BaseStatus {
     FAILED(1, "failed", "失败"),
 
     /**
+     * 基础错误信息
+     */
+    BASE_ERROR(4000,"fail {0}","错误 {0}"),
+
+    /**
      * 参数异常
      */
     PARAMETER_MISS(10000, "parameter is missing", "参数不能为空"),
