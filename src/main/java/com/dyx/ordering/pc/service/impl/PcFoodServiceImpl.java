@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.FoodDTO;
 import com.dyx.ordering.baseseriver.entity.FoodEntity;
 import com.dyx.ordering.baseseriver.entity.converter.FoodEntityConverter;
-import com.dyx.ordering.baseseriver.service.BaseFoodService;
+import com.dyx.ordering.baseseriver.service.BaseFoodIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.pc.query.PcFoodQuery;
 import com.dyx.ordering.pc.service.PcFoodService;
@@ -22,7 +22,7 @@ import java.util.Objects;
 public class PcFoodServiceImpl implements PcFoodService {
 
     @Autowired
-    private BaseFoodService baseFoodService;
+    private BaseFoodIDao baseFoodIDao;
 
     /**
      * 新增
@@ -38,7 +38,7 @@ public class PcFoodServiceImpl implements PcFoodService {
 
         List<FoodEntity> foodEntityList = FoodEntityConverter.INSTANCE.toEntityList(foodDTOList);
 
-        return baseFoodService.saveBatch(foodEntityList);
+        return baseFoodIDao.saveBatch(foodEntityList);
     }
 
     /**
@@ -53,7 +53,7 @@ public class PcFoodServiceImpl implements PcFoodService {
             return Boolean.FALSE;
         }
 
-        return baseFoodService.removeByIds(foodIdList);
+        return baseFoodIDao.removeByIds(foodIdList);
     }
 
     /**
@@ -68,7 +68,7 @@ public class PcFoodServiceImpl implements PcFoodService {
             return foodDTO;
         }
 
-        baseFoodService.updateById(foodDTO);
+        baseFoodIDao.updateById(foodDTO);
 
         return foodDTO;
     }
@@ -82,7 +82,7 @@ public class PcFoodServiceImpl implements PcFoodService {
     public IPage<FoodDTO> queryPage(PcFoodQuery wechatFoodQuery) {
 
         IPage<FoodEntity> foodEntityIPage =
-                baseFoodService.page(PageUtil.buildPage(wechatFoodQuery), buildQueryWrapper(wechatFoodQuery));
+                baseFoodIDao.page(PageUtil.buildPage(wechatFoodQuery), buildQueryWrapper(wechatFoodQuery));
         IPage<FoodDTO> foodDTOIPage = FoodEntityConverter.INSTANCE.toIPageDTO(foodEntityIPage);
 
         expandAttributes(foodDTOIPage.getRecords());
@@ -99,7 +99,7 @@ public class PcFoodServiceImpl implements PcFoodService {
     public List<FoodDTO> queryList(PcFoodQuery wechatFoodQuery) {
 
         List<FoodEntity> foodEntityList =
-                baseFoodService.list(buildQueryWrapper(wechatFoodQuery));
+                baseFoodIDao.list(buildQueryWrapper(wechatFoodQuery));
         List<FoodDTO> foodDTOList = FoodEntityConverter.INSTANCE.toDTOList(foodEntityList);
 
         expandAttributes(foodDTOList);

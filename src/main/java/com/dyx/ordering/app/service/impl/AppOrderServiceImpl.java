@@ -12,7 +12,7 @@ import com.dyx.ordering.baseseriver.dto.OrderDTO;
 import com.dyx.ordering.baseseriver.dto.OrderFoodDTO;
 import com.dyx.ordering.baseseriver.entity.OrderEntity;
 import com.dyx.ordering.baseseriver.entity.converter.OrderEntityConverter;
-import com.dyx.ordering.baseseriver.service.BaseOrderService;
+import com.dyx.ordering.baseseriver.service.BaseOrderIDao;
 import com.dyx.ordering.common.constant.BaseConstants;
 import com.dyx.ordering.common.enums.BaseStatus;
 import com.dyx.ordering.common.enums.OrderStatus;
@@ -38,7 +38,7 @@ public class AppOrderServiceImpl implements AppOrderService {
     private final ReentrantLock reentrantLock = new ReentrantLock();
 
     @Autowired
-    private BaseOrderService baseOrderService;
+    private BaseOrderIDao baseOrderIDao;
 
     @Autowired
     private AppOrderFoodService wechatOrderFoodService;
@@ -63,7 +63,7 @@ public class AppOrderServiceImpl implements AppOrderService {
 
         List<OrderEntity> orderEntityList = OrderEntityConverter.INSTANCE.toEntityList(orderDTOList);
 
-        return baseOrderService.saveBatch(orderEntityList);
+        return baseOrderIDao.saveBatch(orderEntityList);
     }
 
     /**
@@ -78,7 +78,7 @@ public class AppOrderServiceImpl implements AppOrderService {
             return Boolean.FALSE;
         }
 
-        return baseOrderService.removeByIds(orderIdList);
+        return baseOrderIDao.removeByIds(orderIdList);
     }
 
     /**
@@ -93,7 +93,7 @@ public class AppOrderServiceImpl implements AppOrderService {
             return Boolean.FALSE;
         }
 
-        return baseOrderService.updateById(orderDTO);
+        return baseOrderIDao.updateById(orderDTO);
     }
 
     /**
@@ -105,7 +105,7 @@ public class AppOrderServiceImpl implements AppOrderService {
     public IPage<OrderDTO> queryPage(AppOrderQuery orderQuery) {
 
         IPage<OrderEntity> orderEntityIPage =
-                baseOrderService.page(PageUtil.buildPage(orderQuery), buildQueryWrapper(orderQuery));
+                baseOrderIDao.page(PageUtil.buildPage(orderQuery), buildQueryWrapper(orderQuery));
         IPage<OrderDTO> orderDTOIPage = OrderEntityConverter.INSTANCE.toIPageDTO(orderEntityIPage);
         expandAttributes(orderDTOIPage.getRecords());
 
@@ -155,7 +155,7 @@ public class AppOrderServiceImpl implements AppOrderService {
         // 保存订单
         OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
         orderEntity.setTotalPrice(totalPrice);
-        boolean saveOrder = baseOrderService.save(orderEntity);
+        boolean saveOrder = baseOrderIDao.save(orderEntity);
 
         if (!(saveOrder && saveOrderFoodList)) {
             throw new ServiceException(BaseStatus.ORDER_SAVE_ERROR);
@@ -206,7 +206,7 @@ public class AppOrderServiceImpl implements AppOrderService {
         // 更新订单
         OrderEntity orderEntity = OrderEntityConverter.INSTANCE.toEntity(orderDTO);
         orderEntity.setTotalPrice(totalPrice);
-        boolean updateOrderResult = baseOrderService.updateById(orderEntity);
+        boolean updateOrderResult = baseOrderIDao.updateById(orderEntity);
 
         if (!(updateOrderResult && saveOrderFoodResult && updateOrderFoodResult)) {
             throw new ServiceException(BaseStatus.ORDER_SAVE_ERROR);
@@ -242,7 +242,7 @@ public class AppOrderServiceImpl implements AppOrderService {
                     Long serialNumberMax = wechatOrderMapper.selectSerialNumberMax();
                     orderEntity.setSerialNumber(++serialNumberMax);
 
-                    boolean updateOrderResult = baseOrderService.updateById(orderDTO);
+                    boolean updateOrderResult = baseOrderIDao.updateById(orderDTO);
                     if (!updateOrderResult) {
                         throw new ServiceException(BaseStatus.ORDER_PURCHASE_ERROR);
                     }

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.FoodDTO;
 import com.dyx.ordering.baseseriver.entity.FoodEntity;
 import com.dyx.ordering.baseseriver.entity.converter.FoodEntityConverter;
-import com.dyx.ordering.baseseriver.service.BaseFoodService;
+import com.dyx.ordering.baseseriver.service.BaseFoodIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.wechat.query.WechatFoodQuery;
 import com.dyx.ordering.wechat.service.WechatFoodService;
@@ -22,7 +22,7 @@ import java.util.Objects;
 public class WechatFoodServiceImpl implements WechatFoodService{
 
     @Autowired
-    private BaseFoodService baseFoodService;
+    private BaseFoodIDao baseFoodIDao;
 
     /**
      * 新增
@@ -38,7 +38,7 @@ public class WechatFoodServiceImpl implements WechatFoodService{
 
         List<FoodEntity> foodEntityList = FoodEntityConverter.INSTANCE.toEntityList(foodDTOList);
 
-        return baseFoodService.saveBatch(foodEntityList);
+        return baseFoodIDao.saveBatch(foodEntityList);
     }
 
     /**
@@ -53,7 +53,7 @@ public class WechatFoodServiceImpl implements WechatFoodService{
             return Boolean.FALSE;
         }
 
-        return baseFoodService.removeByIds(foodIdList);
+        return baseFoodIDao.removeByIds(foodIdList);
     }
 
     /**
@@ -68,7 +68,7 @@ public class WechatFoodServiceImpl implements WechatFoodService{
             return foodDTO;
         }
 
-        baseFoodService.updateById(foodDTO);
+        baseFoodIDao.updateById(foodDTO);
 
         return foodDTO;
     }
@@ -83,7 +83,7 @@ public class WechatFoodServiceImpl implements WechatFoodService{
     public IPage<FoodDTO> queryPage(WechatFoodQuery wechatFoodQuery) {
 
         IPage<FoodEntity> foodEntityIPage =
-                baseFoodService.page(PageUtil.buildPage(wechatFoodQuery), buildQueryWrapper(wechatFoodQuery));
+                baseFoodIDao.page(PageUtil.buildPage(wechatFoodQuery), buildQueryWrapper(wechatFoodQuery));
         IPage<FoodDTO> foodDTOIPage = FoodEntityConverter.INSTANCE.toIPageDTO(foodEntityIPage);
 
         expandAttributes(foodDTOIPage.getRecords());

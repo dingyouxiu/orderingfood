@@ -8,7 +8,7 @@ import com.dyx.ordering.app.service.AppCategoryService;
 import com.dyx.ordering.baseseriver.dto.CategoryDTO;
 import com.dyx.ordering.baseseriver.entity.CategoryEntity;
 import com.dyx.ordering.baseseriver.entity.converter.CategoryEntityConverter;
-import com.dyx.ordering.baseseriver.service.BaseCategoryService;
+import com.dyx.ordering.baseseriver.service.BaseCategoryIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.util.Objects;
 public class AppCategoryServiceImpl implements AppCategoryService {
 
     @Autowired
-    private BaseCategoryService baseCategoryService;
+    private BaseCategoryIDao baseCategoryIDao;
 
     /**
      * 新增
@@ -38,7 +38,7 @@ public class AppCategoryServiceImpl implements AppCategoryService {
 
         List<CategoryEntity> categoryEntityList = CategoryEntityConverter.INSTANCE.toEntityList(categoryDTOList);
 
-        return baseCategoryService.saveBatch(categoryEntityList);
+        return baseCategoryIDao.saveBatch(categoryEntityList);
     }
 
     /**
@@ -53,7 +53,7 @@ public class AppCategoryServiceImpl implements AppCategoryService {
             return Boolean.FALSE;
         }
 
-        return baseCategoryService.removeByIds(categoryIdList);
+        return baseCategoryIDao.removeByIds(categoryIdList);
     }
 
     /**
@@ -68,7 +68,7 @@ public class AppCategoryServiceImpl implements AppCategoryService {
             return categoryDTO;
         }
 
-        baseCategoryService.updateById(categoryDTO);
+        baseCategoryIDao.updateById(categoryDTO);
 
         return categoryDTO;
     }
@@ -82,7 +82,7 @@ public class AppCategoryServiceImpl implements AppCategoryService {
     public IPage<CategoryDTO> queryPage(AppCategoryQuery wechatCategoryQuery) {
 
         IPage<CategoryEntity> categoryEntityIPage =
-                baseCategoryService.page(PageUtil.buildPage(wechatCategoryQuery), buildQueryWrapper(wechatCategoryQuery));
+                baseCategoryIDao.page(PageUtil.buildPage(wechatCategoryQuery), buildQueryWrapper(wechatCategoryQuery));
         IPage<CategoryDTO> categoryDTOIPage = CategoryEntityConverter.INSTANCE.toIPageDTO(categoryEntityIPage);
 
         expandAttributes(categoryDTOIPage.getRecords());
@@ -93,7 +93,7 @@ public class AppCategoryServiceImpl implements AppCategoryService {
     @Override
     public List<CategoryDTO> queryList() {
 
-        List<CategoryEntity> categoryEntityList = baseCategoryService.list();
+        List<CategoryEntity> categoryEntityList = baseCategoryIDao.list();
 
         return CategoryEntityConverter.INSTANCE.toDTOList(categoryEntityList);
     }

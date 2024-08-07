@@ -8,7 +8,7 @@ import com.dyx.ordering.app.service.AppFoodService;
 import com.dyx.ordering.baseseriver.dto.FoodDTO;
 import com.dyx.ordering.baseseriver.entity.FoodEntity;
 import com.dyx.ordering.baseseriver.entity.converter.FoodEntityConverter;
-import com.dyx.ordering.baseseriver.service.BaseFoodService;
+import com.dyx.ordering.baseseriver.service.BaseFoodIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.util.Objects;
 public class AppFoodServiceImpl implements AppFoodService {
 
     @Autowired
-    private BaseFoodService baseFoodService;
+    private BaseFoodIDao baseFoodIDao;
 
     /**
      * 新增
@@ -38,7 +38,7 @@ public class AppFoodServiceImpl implements AppFoodService {
 
         List<FoodEntity> foodEntityList = FoodEntityConverter.INSTANCE.toEntityList(foodDTOList);
 
-        return baseFoodService.saveBatch(foodEntityList);
+        return baseFoodIDao.saveBatch(foodEntityList);
     }
 
     /**
@@ -53,7 +53,7 @@ public class AppFoodServiceImpl implements AppFoodService {
             return Boolean.FALSE;
         }
 
-        return baseFoodService.removeByIds(foodIdList);
+        return baseFoodIDao.removeByIds(foodIdList);
     }
 
     /**
@@ -68,7 +68,7 @@ public class AppFoodServiceImpl implements AppFoodService {
             return foodDTO;
         }
 
-        baseFoodService.updateById(foodDTO);
+        baseFoodIDao.updateById(foodDTO);
 
         return foodDTO;
     }
@@ -83,7 +83,7 @@ public class AppFoodServiceImpl implements AppFoodService {
     public IPage<FoodDTO> queryPage(AppFoodQuery wechatFoodQuery) {
 
         IPage<FoodEntity> foodEntityIPage =
-                baseFoodService.page(PageUtil.buildPage(wechatFoodQuery), buildQueryWrapper(wechatFoodQuery));
+                baseFoodIDao.page(PageUtil.buildPage(wechatFoodQuery), buildQueryWrapper(wechatFoodQuery));
         IPage<FoodDTO> foodDTOIPage = FoodEntityConverter.INSTANCE.toIPageDTO(foodEntityIPage);
 
         expandAttributes(foodDTOIPage.getRecords());

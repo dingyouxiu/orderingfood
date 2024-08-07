@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.CategoryDTO;
 import com.dyx.ordering.baseseriver.entity.CategoryEntity;
 import com.dyx.ordering.baseseriver.entity.converter.CategoryEntityConverter;
-import com.dyx.ordering.baseseriver.service.BaseCategoryService;
+import com.dyx.ordering.baseseriver.service.BaseCategoryIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.pc.query.PcCategoryQuery;
 import com.dyx.ordering.pc.service.PcCategoryService;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class PcCategoryServiceImpl implements PcCategoryService {
 
     @Autowired
-    private BaseCategoryService baseCategoryService;
+    private BaseCategoryIDao baseCategoryIDao;
     
     @Autowired
     private PcFoodService pcFoodService;
@@ -44,7 +44,7 @@ public class PcCategoryServiceImpl implements PcCategoryService {
 
         List<CategoryEntity> categoryEntityList = CategoryEntityConverter.INSTANCE.toEntityList(categoryDTOList);
 
-        return baseCategoryService.saveBatch(categoryEntityList);
+        return baseCategoryIDao.saveBatch(categoryEntityList);
     }
 
     /**
@@ -60,7 +60,7 @@ public class PcCategoryServiceImpl implements PcCategoryService {
         }
 
         // 判断菜单下是否有商品
-        List<CategoryEntity> categoryEntityList = baseCategoryService.listByIds(categoryIdList);
+        List<CategoryEntity> categoryEntityList = baseCategoryIDao.listByIds(categoryIdList);
         Map<Long, String> categoryIdAndNameMap =
                 categoryEntityList
                         .stream()
@@ -68,7 +68,7 @@ public class PcCategoryServiceImpl implements PcCategoryService {
 //        pcFoodService.
 
 
-        return baseCategoryService.removeByIds(categoryIdList);
+        return baseCategoryIDao.removeByIds(categoryIdList);
     }
 
     /**
@@ -83,7 +83,7 @@ public class PcCategoryServiceImpl implements PcCategoryService {
             return categoryDTO;
         }
 
-        baseCategoryService.updateById(categoryDTO);
+        baseCategoryIDao.updateById(categoryDTO);
 
         return categoryDTO;
     }
@@ -97,7 +97,7 @@ public class PcCategoryServiceImpl implements PcCategoryService {
     public IPage<CategoryDTO> queryPage(PcCategoryQuery wechatCategoryQuery) {
 
         IPage<CategoryEntity> categoryEntityIPage =
-                baseCategoryService.page(PageUtil.buildPage(wechatCategoryQuery), buildQueryWrapper(wechatCategoryQuery));
+                baseCategoryIDao.page(PageUtil.buildPage(wechatCategoryQuery), buildQueryWrapper(wechatCategoryQuery));
         IPage<CategoryDTO> categoryDTOIPage = CategoryEntityConverter.INSTANCE.toIPageDTO(categoryEntityIPage);
 
         expandAttributes(categoryDTOIPage.getRecords());
@@ -108,7 +108,7 @@ public class PcCategoryServiceImpl implements PcCategoryService {
     @Override
     public List<CategoryDTO> queryList() {
 
-        List<CategoryEntity> categoryEntityList = baseCategoryService.list();
+        List<CategoryEntity> categoryEntityList = baseCategoryIDao.list();
 
         return CategoryEntityConverter.INSTANCE.toDTOList(categoryEntityList);
     }

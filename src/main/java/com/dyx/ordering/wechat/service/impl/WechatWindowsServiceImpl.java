@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dyx.ordering.baseseriver.dto.WindowsDTO;
 import com.dyx.ordering.baseseriver.entity.WindowsEntity;
 import com.dyx.ordering.baseseriver.entity.converter.WindowsEntityConverter;
-import com.dyx.ordering.baseseriver.service.BaseWindowsService;
+import com.dyx.ordering.baseseriver.service.BaseWindowsIDao;
 import com.dyx.ordering.common.utils.PageUtil;
 import com.dyx.ordering.wechat.query.WechatWindowsQuery;
 import com.dyx.ordering.wechat.service.WechatWindowsService;
@@ -22,7 +22,7 @@ import java.util.Objects;
 public class WechatWindowsServiceImpl implements WechatWindowsService {
 
     @Autowired
-    private BaseWindowsService baseWindowsService;
+    private BaseWindowsIDao baseWindowsIDao;
 
     /**
      * 新增
@@ -38,7 +38,7 @@ public class WechatWindowsServiceImpl implements WechatWindowsService {
 
         List<WindowsEntity> windowsEntityList = WindowsEntityConverter.INSTANCE.toEntityList(windowsDTOList);
 
-        return baseWindowsService.saveBatch(windowsEntityList);
+        return baseWindowsIDao.saveBatch(windowsEntityList);
     }
 
     /**
@@ -53,7 +53,7 @@ public class WechatWindowsServiceImpl implements WechatWindowsService {
             return Boolean.FALSE;
         }
 
-        return baseWindowsService.removeByIds(windowsIdList);
+        return baseWindowsIDao.removeByIds(windowsIdList);
     }
 
     /**
@@ -68,7 +68,7 @@ public class WechatWindowsServiceImpl implements WechatWindowsService {
             return windowsDTO;
         }
 
-        baseWindowsService.updateById(windowsDTO);
+        baseWindowsIDao.updateById(windowsDTO);
 
         return windowsDTO;
     }
@@ -82,7 +82,7 @@ public class WechatWindowsServiceImpl implements WechatWindowsService {
     public IPage<WindowsDTO> queryPage(WechatWindowsQuery wechatWindowsQuery) {
 
         IPage<WindowsEntity> windowsEntityIPage =
-                baseWindowsService.page(PageUtil.buildPage(wechatWindowsQuery), buildQueryWrapper(wechatWindowsQuery));
+                baseWindowsIDao.page(PageUtil.buildPage(wechatWindowsQuery), buildQueryWrapper(wechatWindowsQuery));
         IPage<WindowsDTO> windowsDTOIPage = WindowsEntityConverter.INSTANCE.toIPageDTO(windowsEntityIPage);
 
         expandAttributes(windowsDTOIPage.getRecords());
