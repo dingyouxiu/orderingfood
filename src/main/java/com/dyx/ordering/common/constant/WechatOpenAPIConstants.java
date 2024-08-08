@@ -9,4 +9,6 @@ public class WechatOpenAPIConstants {
 
     public static String SECRET = "secret";
 
+    public static String CODE = "code";
+
 }

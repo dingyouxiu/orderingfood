@@ -46,6 +46,13 @@ public enum BaseStatus {
     ORDER_SAVE_ERROR(11000, "order save error", "订单保存异常"),
     ORDER_EDIT_ERROR(11001, "order edit error", "订单编辑异常"),
     ORDER_PURCHASE_ERROR(11002, "order purchase error", "下单失败"),
+
+    /**
+     * 登录异常
+     */
+    LOGIN_USER_NOT_EXIST_ERROR(12000, "user not exist", "用户未注册"),
+    LOGIN_USER_PASSWORD_ERROR(12000, "user password error", "用户密码错误"),
+    LOGIN_USER_REGISTER_ERROR(12000, "user register error", "用户注册失败"),
     ;
 
     private final int code;

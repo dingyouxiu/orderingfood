@@ -1,40 +1,36 @@
 package com.dyx.ordering.wechat.controller;
 
-import com.dyx.ordering.common.constant.WechatOpenAPIConstants;
-import com.dyx.ordering.common.utils.HttpUtil;
-import com.dyx.ordering.common.utils.StringReplaceUtil;
-import com.dyx.ordering.result.Result;
 import com.dyx.ordering.basedao.dto.UserDTO;
-import com.dyx.ordering.basedao.entity.UserEntity;
+import com.dyx.ordering.result.Result;
 import com.dyx.ordering.wechat.service.WechatLoginService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/wechat")
+@Api(value = "小程序", tags = "登录")
 public class WechatLoginController {
 
     @Autowired
-    private WechatLoginService loginService;
+    private WechatLoginService wechatLoginService;
 
-    @GetMapping("/login")
-    public Result<UserDTO> login() {
-        UserEntity userEntity = new UserEntity();
-        boolean save = loginService.save(userEntity);
+    @PostMapping("/login")
+    @ApiOperation(value = "登录", notes = "登录")
+    public Result<UserDTO> login(@RequestBody UserDTO userDTO) {
 
-        String loginApi = WechatOpenAPIConstants.LOGIN_API;
-        Map<String,Object> stationData = new HashMap<>();
-        stationData.put(WechatOpenAPIConstants.APP_ID,"2222");
-        stationData.put(WechatOpenAPIConstants.SECRET,"2222");
-        String loginApiUrl = StringReplaceUtil.placeholderSubstitution(loginApi, stationData);
-        String s = HttpUtil.get(loginApiUrl);
+        return Result.success(wechatLoginService.login(userDTO));
+    }
 
-        return Result.success();
+    @PostMapping("/register")
+    @ApiOperation(value = "注册", notes = "注册")
+    public Result<UserDTO> register(@RequestBody UserDTO userDTO) {
+
+        return Result.success(wechatLoginService.register(userDTO));
     }
 
 }

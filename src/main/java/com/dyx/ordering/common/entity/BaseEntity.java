@@ -14,13 +14,13 @@ public class BaseEntity {
     private Long id;
 
     @ApiModelProperty("创建人")
-    private String createUser;
+    private Long createUser;
 
     @ApiModelProperty("创建时间")
     private LocalDateTime createTime;
 
     @ApiModelProperty("更新人")
-    private String updateUser;
+    private Long updateUser;
 
     @ApiModelProperty("更新时间")
     private LocalDateTime updateTime;
